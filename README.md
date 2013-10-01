@@ -1,4 +1,7 @@
-Introduction:
+encoDHer
+===
+
+### Introduction
 
 encoDHer is a python utility to facilitate symmetric encryption of email
 messages using the Diffie-Hellman (DH) protocol for generating a shared
@@ -6,7 +9,7 @@ secret between the sender and recipient of an email message.
 
 Keys are stored in the database file keys.db.
 
-Installation requirements:
+### Installation requirements
 
 The encodher package requires python-gnupg-0.3.5 or greater to function.
 The latest version can be obtained from:
@@ -26,28 +29,30 @@ export and to identify DH public keys for import. You will need the
 GPG secret key to sign your DH keys, and the receiver's GPG public key to
 verify and import DH public keys.
 
-Startup:
+You should also edit the constants.py file to reflect your parameters.
+
+### Startup
 
 To use the program, you must first initialize the keys database.  This is
 accomplished with the following command:
 
-encodher.py --init
+    encodher.py --init
 
 Once your database is created, you can generate keys for specific recipients
 using the command:
 
-encodher.py --gen-key sender@example.org receiver@otherexample.org
+    encodher.py --gen-key sender@example.org receiver@otherexample.org
 
 where your email address is sender@example.org and your intended recipient's
 email address is receiver@otherexample.org. Note that using the DH shared
 secret protocol requires generating a DH secret key for each sender -> receiver
 pair.  So you will probably end up with several keys in the database.
 
-Key distribution:
+### Key distribution
 
 You can then export your signed DH public key with the command:
 
-encodher.py --sign-pub sender@example.org receiver@otherexample.org
+    encodher.py --sign-pub sender@example.org receiver@otherexample.org
 
 The output will be a signed version of your public key.  You can then
 send that public key to a recipient over a non-secret channel.  An
@@ -57,7 +62,7 @@ exchanges for the encodher utility, but any nonsecure channel will work.
 When the recipient receives your DH public key, she can then import your
 key into her database using the command:
 
-encodher.py --import textfile
+    encodher.py --import textfile
 
 where textfile is a text file containing your signed DH public key. Note
 that the GPG public key used to sign your DH public key must be in her
@@ -68,13 +73,13 @@ send it to you.  You can then import her signed DH public key and you
 are ready to communicate using symmetric key encryption with a DH shared
 secret key.
 
-Message encryption and exchange:
+### Message encryption and exchange
 
 To encrypt a message, first create the plaintext in a file.  You can
 then encrypt the contents of that message with your DH shared secret
 key using the command:
 
-encodher.py --encode-email file sender@example.org receiver@otherexample.org
+    encodher.py --encode-email file sender@example.org receiver@otherexample.org
 
 The email will be encrypted using symmetric aes256 encryption and output
 to file.asc.  The file is an ascii-armored pgp-format file.
@@ -82,7 +87,7 @@ to file.asc.  The file is an ascii-armored pgp-format file.
 Upon receipt of the encrypted message, the receiver can then decrypt the
 file using the command:
 
-encodher.py --decode-email file.asc sender@example.org receiver@otherexample.org
+    encodher.py --decode-email file.asc sender@example.org receiver@otherexample.org
 
 The plaintext message will then be displayed.  It is probably good to note
 here that the first email address is always the message sender, and the second
@@ -90,37 +95,37 @@ is always the receiver.  So for example, if I received a message at
 alice@alice.com from my buddy bob@bob.com, the correct command to decrypt the
 message would be:
 
-encodher.py --decode-email file.asc bob@bob.com alice@alice.com
+    encodher.py --decode-email file.asc bob@bob.com alice@alice.com
 
 because bob was the sender of the email and alice was the receiver.  When I
 encrypt an email to bob, the correct command is:
 
-encodher.py --encode-email file alice@alice.com bob@bob.com
+    encodher.py --encode-email file alice@alice.com bob@bob.com
 
 because in this case alice is the sender and bob the receiver.
 
-Other options:
+### Other options
 
 Various options for key management exist.  The following list of options
 can be obtained by executing encodher.py without any arguments.
 
-Options:
- --init, -i: initialize keys.db database
- --import, -m: import signed public key
- --mutate-key, -a: mutate DH secret key
- --sign-pub, -s: sign your own public key
- --change-toemail, -t: change toEmail on key
- --change-fromemail, -f: change fromEmail on key
- --change-pubkey, -p: change public key for fromEmail -> toEmail
- --encode-email, -e: symmetrically encode a file for fromEmail -> toEmail
- --decode-email, -d: symmetrically decode a file for fromEmail -> toEmail
- --list-keys, -l: list all keys in database
- --gen-secret, -c: generate shared secret for fromEmail -> toEmail
- --gen-key, -n: generate a new key for fromEmail -> toEmail
- --get-key, -g: get key for fromEmail -> toEmail from database
- --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup
+    Options:
+     --init, -i: initialize keys.db database
+     --import, -m: import signed public key
+     --mutate-key, -a: mutate DH secret key
+     --sign-pub, -s: sign your own public key
+     --change-toemail, -t: change toEmail on key
+     --change-fromemail, -f: change fromEmail on key
+     --change-pubkey, -p: change public key for fromEmail -> toEmail
+     --encode-email, -e: symmetrically encode a file for fromEmail -> toEmail
+     --decode-email, -d: symmetrically decode a file for fromEmail -> toEmail
+     --list-keys, -l: list all keys in database
+     --gen-secret, -c: generate shared secret for fromEmail -> toEmail
+     --gen-key, -n: generate a new key for fromEmail -> toEmail
+     --get-key, -g: get key for fromEmail -> toEmail from database
+     --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup
 
-Perfect forward secrecy:
+### Perfect forward secrecy
 
 The primary reason for using symmetric encryption with DH shared secrets
 for email exchanges is to provide for perfect forward secrecy (PFS).  If, after
@@ -128,7 +133,7 @@ an exchange, the DH keys are destroyed by both parties, any messages
 encrypted with these keys can no longer be read, achieving PFS. Users can
 change their keys to take advantage of PFS by executing:
 
-encodher.py --mutate-key sender@example.org receiver@example.org
+    encodher.py --mutate-key sender@example.org receiver@example.org
 
 This will destroy sender@example.org's old DH secret key, generate a new
 DH secret key and export the corresponding new DH public key encrypted with the
@@ -139,7 +144,7 @@ the --sign-pub option can be used. Once the new DH public key has been
 imported by the receiver, no one (including the original sender and receiver)
 will be able to read the old messages. Change keys carefully.
 
-Anonymous communication:
+### Anonymous communication
 
 If anonymous communication is desired, encodher presents an option to encode
 the email for transmission using the mixmaster network.  Once the appropriate
@@ -147,16 +152,17 @@ mixmaster headers are added (by answering affirmatively to the question about
 sending anonymously), the message can be dispatched to the
 alt.anonymous.messages newsgroup with the command:
 
-mixmaster -c 1 < message.asc
+    mixmaster -c 1 < message.asc
 
 where message.asc contains the encrypted message and plaintext headers. Note
-that you must have the mixmaster package installed and stats updated for this
-to work.
+that you must have the mixmaster https://github.com/crooks/mixmasterpackage
+installed and stats updated for this to work. Most linux flavors have this
+package available.
 
 To receive messages sent to you at a.a.m using a DH key of yours, you can
 execute the command:
 
-encodher.py -h
+    encodher.py --fetch-aam
 
 This will fetch and decrypt all a.a.m messages for each of the keys in your
 database.
