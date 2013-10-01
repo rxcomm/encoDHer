@@ -128,7 +128,7 @@ an exchange, the DH keys are destroyed by both parties, any messages
 encrypted with these keys can no longer be read, achieving PFS. Users can
 change their keys to take advantage of PFS by executing:
 
-./encodher.py --mutate-key sender@example.org receiver@example.org
+encodher.py --mutate-key sender@example.org receiver@example.org
 
 This will destroy sender@example.org's old DH secret key, generate a new
 DH secret key and export the corresponding new DH public key encrypted with the
