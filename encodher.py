@@ -275,7 +275,7 @@ def hs():
             f.write('Newsgroups: alt.anonymous.messages\n')
             f.write('X-No-Archive: Yes\n')
             f.write('\n')
-        f.write(str(msg).replace('Version: GnuPG v1.4.12 (GNU/Linux)\n', ''))
+        f.write(re.sub('\n^V.*$', '', str(msg), count=0, flags=re.MULTILINE))
 
     print 'Passphrase: %s' % passphrase
 
@@ -453,7 +453,7 @@ def mutate():
             f.write('Newsgroups: alt.anonymous.messages\n')
             f.write('X-No-Archive: Yes\n')
             f.write('\n')
-        f.write(str(msg).replace('Version: GnuPG v1.4.12 (GNU/Linux)\n', ''))
+        f.write(re.sub('\n^V.*$', '', str(msg), count=0, flags=re.MULTILINE))
         print 'New key encrypted with old DH shared secret is in "mutatedkey.asc"'
         print 'Get unencrypted, signed copy of new key with '+sys.argv[0]+' --sign-pub '+fromEmail+' '+toEmail
 
