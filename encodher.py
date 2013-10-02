@@ -75,7 +75,7 @@ def importKey():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     print 'Importing new DH public key to database'
@@ -138,7 +138,7 @@ def sign_pub():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     gpg = gnupg.GPG(gnupghome=HOME, keyring=KEYRING, secret_keyring=SECRET_KEYRING, options='--throw-keyids')
@@ -179,7 +179,7 @@ def change_toEmail():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     keys = dhutils.changeToEmail(fromEmail,oldToEmail,newToEmail)
@@ -200,7 +200,7 @@ def change_fromEmail():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     keys = dhutils.changeFromEmail(oldFromEmail,newFromEmail,toEmail)
@@ -220,7 +220,7 @@ def change_pub():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     keys = dhutils.changePubKey(fromEmail,toEmail,pubkey)
@@ -239,7 +239,7 @@ def hs():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     ans = raw_input('Do you want to send this message anonymously? (y/N)')
@@ -294,7 +294,7 @@ def hsd():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     base, ext = os.path.splitext(file_name)
@@ -315,7 +315,7 @@ def list_keys():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     print 'Listing of all keys in database:'
@@ -334,7 +334,7 @@ def secret():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     sharedSecret = dhutils.genSharedSecret(fromEmail,toEmail)
@@ -353,7 +353,7 @@ def gen():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     dhutils.makeKeys()
@@ -373,7 +373,7 @@ def get():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail)
@@ -393,7 +393,7 @@ def delete():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     dhutils.deleteKey(fromEmail,toEmail)
@@ -411,7 +411,7 @@ def mutate():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --init <fromEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     oldpassphrase = dhutils.genSharedSecret(fromEmail,toEmail)
@@ -518,7 +518,7 @@ def clone():
         with open('keys.db'): pass
     except IOError:
         print 'No keys database (keys.db)'
-        print 'initialize the database with '+sys.argv[0]+' --clone-key <fromEmail> <toEmail> <newFromEmail> <newToEmail>'
+        print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
     dhutils.cloneKey(fromEmail,toEmail,newFromEmail,newToEmail)
