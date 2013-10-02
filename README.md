@@ -116,7 +116,7 @@ encrypted email.  You clone keys by using the command:
 This will clone your secret key from the route old1@first.org -> old2@second.org
 to the new route new1@third.org -> new2@fourth.org.  When someone wants
 to use your posted DH public key to send you encrypted email, they will send
-you their DH public key over any insecure route.  You can then import their
+you their DH public key over any insecure channel.  You can then import their
 public key and the new route will have a completely different shared secret
 than the old route does.
 
