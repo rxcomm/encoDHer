@@ -55,6 +55,7 @@ except (IndexError):
     print ' --gen-key, -n: generate a new key for fromEmail -> toEmail'
     print ' --get-key, -g: get key for fromEmail -> toEmail from database'
     print ' --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup'
+    print ' --clone-key, -y: clone key from one route to another'
     sys.exit(0)
 
 def init():
@@ -502,6 +503,26 @@ def aam():
                     print '\n'+str(msg)
     print 'End of messages.'
 
+def clone():
+    try:
+        fromEmail = sys.argv[2]
+        toEmail = sys.argv[3]
+        newFromEmail = sys.argv[4]
+        newToEmail = sys.argv[5]
+    except (IndexError):
+        print 'You need to supply a fromEmail, and toEmail!'
+        print 'Ex: '+sys.argv[0]+' --mutate-key <fromEmail> <toEmail>'
+        sys.exit(1)
+
+    try:
+        with open('keys.db'): pass
+    except IOError:
+        print 'No keys database (keys.db)'
+        print 'initialize the database with '+sys.argv[0]+' --clone-key <fromEmail> <toEmail> <newFromEmail> <newToEmail>'
+        sys.exit(1)
+
+    dhutils.cloneKey(fromEmail,toEmail,newFromEmail,newToEmail)
+
 def errhandler():
     print 'Invalid option, try again!'
     print 'Execute '+sys.argv[0]+' to get a list of options.'
@@ -536,7 +557,9 @@ options = { '--init'   : init,
   '--mutate-key' : mutate,
   '-a' : mutate,
   '--fetch-aam' : aam,
-  '-h' : aam
+  '-h' : aam,
+  '--clone-key' : clone,
+  '-y' : clone
 }
 
 options.get(sys.argv[1],errhandler)()

@@ -104,6 +104,22 @@ encrypt an email to bob, the correct command is:
 
 because in this case alice is the sender and bob the receiver.
 
+### Key cloning
+
+It is possible to clone your DH secret key to another route. This functionality
+is useful when, for example you want to post your DH public key on a
+key table or other public place to enable multiple people to send you
+encrypted email.  You clone keys by using the command:
+
+    encodher.py --clone-key old1@first.org old2@second.org new1@third.org new2@fourth.org
+
+This will clone your secret key from the route old1@first.org -> old2@second.org
+to the new route new1@third.org -> new2@fourth.org.  When someone wants
+to use your posted DH public key to send you encrypted email, they will send
+you their DH public key over any insecure route.  You can then import their
+public key and the new route will have a completely different shared secret
+than the old route does.
+
 ### Other options
 
 Various options for key management exist.  The following list of options
@@ -124,6 +140,7 @@ can be obtained by executing encodher.py without any arguments.
      --gen-key, -n: generate a new key for fromEmail -> toEmail
      --get-key, -g: get key for fromEmail -> toEmail from database
      --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup
+      --clone-key, -y: clone key from one route to another
 
 ### Perfect forward secrecy
 
@@ -155,7 +172,7 @@ alt.anonymous.messages newsgroup with the command:
     mixmaster -c 1 < message.asc
 
 where message.asc contains the encrypted message and plaintext headers. Note
-that you must have the mixmaster https://github.com/crooks/mixmasterpackage
+that you must have the mixmaster https://github.com/crooks/mixmaster package
 installed and stats updated for this to work. Most linux flavors have this
 package available.
 

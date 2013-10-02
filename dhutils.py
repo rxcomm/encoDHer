@@ -108,6 +108,25 @@ def listKeys():
         for row in rows:
             print row[0]+' -> '+row[1]
 
+def cloneKey(fromEmail,toEmail,newFromEmail,newToEmail):
+   """
+   Clone key from route fromEmail -> toEmail to new route newFromEmail -> newToEmail
+   """
+
+   db = sqlite3.connect('keys.db')
+
+   with db:
+
+       changed = False
+       cur = db.cursor()
+       cur.execute("SELECT * FROM keys")
+       rows = cur.fetchall()
+       for row in rows:
+           if row[0] == fromEmail and row[1] == toEmail:
+               changed = True
+               cur.execute('INSERT INTO keys VALUES(?,?,?,?,?,?)', (newFromEmail,newToEmail,row[2],row[3],row[4],row[5]))
+       if not changed: print 'Matching key not found, nothing changed.'
+
 def changePubKey(fromEmail,toEmail,pubkey):
     """
     Change the otherpubkey for the fromEmail -> toEmail route
