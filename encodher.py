@@ -511,7 +511,7 @@ def clone():
         newToEmail = sys.argv[5]
     except (IndexError):
         print 'You need to supply a fromEmail, and toEmail!'
-        print 'Ex: '+sys.argv[0]+' --mutate-key <fromEmail> <toEmail>'
+        print 'Ex: '+sys.argv[0]+' --clone-key <oldFromEmail> <oldToEmail> <newFromEmail> <newToEmail>'
         sys.exit(1)
 
     try:
