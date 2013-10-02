@@ -140,7 +140,7 @@ can be obtained by executing encodher.py without any arguments.
      --gen-key, -n: generate a new key for fromEmail -> toEmail
      --get-key, -g: get key for fromEmail -> toEmail from database
      --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup
-      --clone-key, -y: clone key from one route to another
+     --clone-key, -y: clone key from one route to another
 
 ### Perfect forward secrecy
 
