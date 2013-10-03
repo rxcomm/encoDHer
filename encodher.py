@@ -151,7 +151,8 @@ def sign_pub():
         new_mypubkey += line+'\n'
 
     passphrase = getpass.getpass('Signing key ('+fromEmail+') password: ')
-    signed_data = gpg.sign('DH Public Key:\n'+new_mypubkey+'\n', passphrase=passphrase, keyid=fromEmail)
+    signed_data = gpg.sign('DH Public Key:\n'+new_mypubkey+'\n', passphrase=passphrase,
+                           keyid=fromEmail)
     print ''
     print str(signed_data)
 
@@ -418,7 +419,8 @@ def mutate():
         new_mypubkey += line+'\n'
 
     passphrase = getpass.getpass('Signing key ('+fromEmail+') password: ')
-    signed_data = gpg.sign('DH Public Key:\n'+new_mypubkey+'\n', passphrase=passphrase, keyid=fromEmail)
+    signed_data = gpg.sign('DH Public Key:\n'+new_mypubkey+'\n', passphrase=passphrase,
+                            keyid=fromEmail)
     print ''
     print str(signed_data)
 
@@ -549,4 +551,8 @@ options = { '--init'   : init,
   '-y' : clone
 }
 
-options.get(sys.argv[1],errhandler)()
+def main():
+    options.get(sys.argv[1],errhandler)()
+
+if __name__ == '__main__':
+      main()

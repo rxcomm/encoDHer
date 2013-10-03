@@ -4,3 +4,5 @@ pubring.gpg
 secring.gpg
 trustdb.gpg
 random_seed
+build/
+encodher

@@ -183,3 +183,12 @@ execute the command:
 
 This will fetch and decrypt all a.a.m messages for each of the keys in your
 database.
+
+## Building an executable
+
+To build an executable in the encoDHer directory, execute the command:
+
+    python setup.py install
+
+This will create the executable named 'encodher'. You can then move it anywhere
+in your path for it to be usable.
