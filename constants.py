@@ -9,6 +9,10 @@ KEYRING = '/path/to/pubring.gpg'
 # GPG secret keyring
 SECRET_KEYRING = '/path/to/secring.gpg'
 
+# GPG binary
+GPGBINARY = '/usr/bin/gpg'
+#GPGBINARY = '/usr/bin/gpg2'
+
 # newsserver address
 NEWSSERVER = "localhost"
 

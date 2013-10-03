@@ -37,6 +37,10 @@ import rfc822
 import nntplib
 from constants import *
 
+gpg = gnupg.GPG(gnupghome=HOME, gpgbinary=GPGBINARY, keyring=KEYRING,
+                secret_keyring=SECRET_KEYRING, options='--throw-keyids')
+gpg.encoding = 'utf-8'
+
 try:
     opt = sys.argv[1]
 except (IndexError):
@@ -79,9 +83,6 @@ def importKey():
         sys.exit(1)
 
     print 'Importing new DH public key to database'
-
-    gpg = gnupg.GPG(gnupghome=HOME, keyring=KEYRING, secret_keyring=SECRET_KEYRING, options='--throw-keyids')
-    gpg.encoding = 'utf-8'
 
     with open (file, "r") as f:
         signed_data=f.read()
