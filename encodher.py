@@ -76,7 +76,7 @@ def importKey():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -136,7 +136,7 @@ def sign_pub():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -174,7 +174,7 @@ def change_toEmail():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -195,7 +195,7 @@ def change_fromEmail():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -215,7 +215,7 @@ def change_pub():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -234,7 +234,7 @@ def hs():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -286,7 +286,7 @@ def hsd():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -304,7 +304,7 @@ def hsd():
 
 def list_keys():
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -323,7 +323,7 @@ def secret():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -342,7 +342,7 @@ def gen():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -362,7 +362,7 @@ def get():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -382,7 +382,7 @@ def delete():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -400,7 +400,7 @@ def mutate():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'
@@ -502,7 +502,7 @@ def clone():
         sys.exit(1)
 
     try:
-        with open('keys.db'): pass
+        with open(KEYS_DB): pass
     except IOError:
         print 'No keys database (keys.db)'
         print 'initialize the database with '+sys.argv[0]+' --init'

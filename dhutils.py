@@ -28,6 +28,7 @@ import time
 import sys
 import hashlib
 from binascii import hexlify
+from constants import *
 
 def makeKeys():
     """
@@ -47,7 +48,7 @@ def initDB():
 
     timeStamp = time.time()
     print timeStamp
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
 
     with db:
 
@@ -61,7 +62,7 @@ def insertKeys(fromEmail,toEmail,otherpubkey):
     Create a new keyset for the fromEmail -> toEmail route
     """
 
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
     otherpubkey = str(otherpubkey)
 
     with db:
@@ -81,7 +82,7 @@ def getKeys(fromEmail,toEmail):
     return privkey, mypubkey, otherpubkey
     """
 
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
 
     with db:
 
@@ -97,7 +98,7 @@ def listKeys():
     List routes for all keys in database
     """
 
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
 
     with db:
 
@@ -112,7 +113,7 @@ def cloneKey(fromEmail,toEmail,newFromEmail,newToEmail):
    Clone key from route fromEmail -> toEmail to new route newFromEmail -> newToEmail
    """
 
-   db = sqlite3.connect('keys.db')
+   db = sqlite3.connect(KEYS_DB)
 
    with db:
 
@@ -131,7 +132,7 @@ def changePubKey(fromEmail,toEmail,pubkey):
     Change the otherpubkey for the fromEmail -> toEmail route
     """
 
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
 
     with db:
 
@@ -150,7 +151,7 @@ def changeToEmail(fromEmail,oldToEmail,newToEmail):
     Change the toEmail address on the fromEmail -> oldToEmail route
     """
 
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
 
     with db:
 
@@ -169,7 +170,7 @@ def changeFromEmail(oldFromEmail,newFromEmail,toEmail):
     Change the fromEmail address on the oldFromEmail -> toEmail route
     """
 
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
 
     with db:
 
@@ -188,7 +189,7 @@ def deleteKey(fromEmail,toEmail):
     Delete the fromEmail -> toEmail key from the database
     """
 
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
 
     with db:
 
@@ -226,7 +227,7 @@ def mutateKey(fromEmail,toEmail):
     the new key. (ephemeral DH - perfect forward secrecy)
     """
 
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
 
     with db:
 
@@ -250,7 +251,7 @@ def getNewsTimestamp():
     """
 
     curTimeStamp = time.time()
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
 
     with db:
 
@@ -268,7 +269,7 @@ def getListOfKeys():
     will be used to query a.a.m for any messages associated with our keys.
     """
 
-    db = sqlite3.connect('keys.db')
+    db = sqlite3.connect(KEYS_DB)
     listOfKeys = []
 
     with db:
