@@ -184,11 +184,27 @@ execute the command:
 This will fetch and decrypt all a.a.m messages for each of the keys in your
 database.
 
-## Building an executable
+### Building an executable
 
 To build an executable in the encoDHer directory, execute the command:
 
     python setup.py install
 
 This will create the executable named 'encodher'. You can then move it anywhere
-in your path for it to be usable.
+in your path for it to be usable. You will need to install the python gnupg library
+(version 0.3.5 or greater - see the link above) before the executable will run.
+
+If you don't want to download the entire source, the executable should run on
+most linux systems without any changes.  So you can grab a copy using wget:
+
+    wget https://github.com/rxcomm/encoDHer/raw/master/encodher
+
+make it executable:
+
+    chmod +x encodher
+
+and it should run. To extract the python source from the executable, rename it
+as a .zip archive and unzip it, e.g.:
+
+    mv encodher encodher.zip
+    unzip encodher.zip
