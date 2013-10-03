@@ -1,7 +1,7 @@
 #!/bin/bash
 
 [ -a encodher ] && rm encodher
-zip -q -r encodher.zip *.py*
+zip -q -r encodher.zip *.pyc __main__.py
 echo '#!/usr/bin/env python' | cat - encodher.zip > encodher
 chmod +x encodher
 user=$(id -u -n)
