@@ -141,9 +141,6 @@ def sign_pub():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    gpg = gnupg.GPG(gnupghome=HOME, keyring=KEYRING, secret_keyring=SECRET_KEYRING, options='--throw-keyids')
-    gpg.encoding = 'utf-8'
-
     privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail)
     while len(mypubkey) < 37*50:
         mypubkey = '0'+mypubkey
@@ -248,9 +245,6 @@ def hs():
     else:
         sendAnon = False
 
-    gpg = gnupg.GPG(gnupghome=HOME, keyring=KEYRING, options='--throw-keyids')
-    gpg.encoding = 'utf-8'
-
     passphrase = dhutils.genSharedSecret(fromEmail, toEmail)
 
     with open(file_name, "rb") as f:
@@ -298,9 +292,6 @@ def hsd():
         sys.exit(1)
 
     base, ext = os.path.splitext(file_name)
-    gpg = gnupg.GPG(gnupghome=HOME, keyring=KEYRING, secret_keyring=SECRET_KEYRING)
-    gpg.encoding = 'utf-8'
-
     with open(file_name, "r") as f:
         passphrase = dhutils.genSharedSecret(toEmail, fromEmail)
         msg = gpg.decrypt_file(f, passphrase=passphrase, always_trust=True)
@@ -417,9 +408,6 @@ def mutate():
     oldpassphrase = dhutils.genSharedSecret(fromEmail,toEmail)
     dhutils.mutateKey(fromEmail,toEmail)
 
-    gpg = gnupg.GPG(gnupghome=HOME, keyring=KEYRING, secret_keyring=SECRET_KEYRING, options='--throw-keyids')
-    gpg.encoding = 'utf-8'
-
     privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail)
     while len(mypubkey) < 37*50:
         mypubkey = '0'+mypubkey
@@ -464,8 +452,6 @@ def aam():
     YYMMDD = time.strftime('%y%m%d', time.gmtime(timeStamp))
     HHMMSS = time.strftime('%H%M%S', time.gmtime(timeStamp))
 
-    gpg = gnupg.GPG(gnupghome=HOME, keyring=KEYRING, secret_keyring=SECRET_KEYRING)
-    gpg.encoding = 'utf-8'
     passphrases = dhutils.getListOfKeys()
 
     # connect to server

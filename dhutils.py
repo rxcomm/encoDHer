@@ -37,7 +37,6 @@ def makeKeys():
     a = dh.DiffieHellman()
     privkey = a.privateKey
     pubkey = a.publicKey
-    del a
     return str(privkey), str(pubkey)
 
 def initDB():
@@ -212,7 +211,6 @@ def genSharedSecret(fromEmail, toEmail):
         sharedSecret = a.genSecret(long(privkey),long(otherpubkey))
         s = hashlib.sha256()
         s.update(str(sharedSecret))
-        del a
         return hexlify(s.digest())
     except Exception:
         print 'Invalid public key'
