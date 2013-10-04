@@ -24,6 +24,7 @@ For more information, see https://github.com/rxcomm/encoDHer
 import dh
 import sqlite3
 import sys
+import os
 import time
 import sys
 import hashlib
@@ -54,8 +55,9 @@ def initDB():
 
         cur = db.cursor()
         cur.execute('CREATE TABLE IF NOT EXISTS keys (FromEmail TEXT, ToEmail TEXT, SecretKey TEXT, PublicKey TEXT, OtherPublicKey TEXT, TimeStamp FLOAT)')
-        cur.execute('CREATE TABLE IF NOT EXISTS news (Id INT, LastReadTime FLOAT)')
-        cur.execute('INSERT INTO news (Id, LastReadTime) VALUES(?,?)', (1,timeStamp))
+        cur.execute('CREATE TABLE IF NOT EXISTS news (Id INTEGER PRIMARY KEY, LastReadTime FLOAT)')
+        cur.execute('INSERT OR REPLACE INTO news (Id, LastReadTime) VALUES(?,?)', (1,timeStamp))
+    os.chmod(KEYS_DB,0600)
 
 def insertKeys(fromEmail,toEmail,otherpubkey):
     """
