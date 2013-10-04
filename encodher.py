@@ -476,6 +476,7 @@ def aam():
             message = rfc822.Message(file)
 
             for passphrase in passphrases:
+                message.rewindbody()
                 for label, item in message.items():
                     if label == 'subject':
                         match = hsub.check(passphrase[2][:16],item)
@@ -483,7 +484,7 @@ def aam():
                 #if match: print message.fp.read()
                 if match:
 
-                    print '\nMail for: '+passphrase[0]+' from '+passphrase[1]
+                    print '\nMail for: '+passphrase[1]+' from '+passphrase[0]
                     msg = gpg.decrypt(message.fp.read(), passphrase=passphrase[2],
                           always_trust=True)
                     if not msg:
