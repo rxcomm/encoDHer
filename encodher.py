@@ -273,6 +273,7 @@ def hs():
             f.write('\n')
         f.write(re.sub('\nV.*$', '', str(msg), count=1, flags=re.MULTILINE))
 
+    print 'The encrypted file is '+file_name+'.asc'
     print 'Passphrase: %s' % passphrase
 
 
