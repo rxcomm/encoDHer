@@ -5,3 +5,5 @@ secring.gpg
 trustdb.gpg
 random_seed
 build/
+dist/
+encoDHer.egg-info/

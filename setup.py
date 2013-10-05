@@ -1,4 +1,7 @@
-from distutils.core import setup
+try:
+    from setuptools import setup
+except:
+    from distutils.core import setup
 import zipfile
 import os
 import pwd
@@ -8,7 +11,8 @@ setup(name='encoDHer',
       description='symmetric email encryption utility for python',
       author='David R. Andersen',
       url='https://github.com/rxcomm/encoDHer',
-     py_modules=['encodher','dhutils','dh','constants','hsub'],
+      py_modules=['encodher','dhutils','dh','constants','hsub'],
+      install_requires=['python-gnupg >= 0.3.5'],
      )
 
 
@@ -28,3 +32,5 @@ user = os.getenv('SUDO_USER')
 uid, gid = pwd.getpwnam(user)[2:4]
 os.chown('encodher', uid, gid)
 os.chmod('encodher',0755)
+os.system('cp encodher /usr/local/bin/encodher')
+print 'encodher executable copied to /usr/local/bin/encodher'

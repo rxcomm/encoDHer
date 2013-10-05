@@ -59,6 +59,21 @@ def initDB():
         cur.execute('INSERT OR REPLACE INTO news (Id, LastReadTime) VALUES(?,?)', (1,timeStamp))
     os.chmod(KEYS_DB,0600)
 
+def rollback(days):
+    """
+    Roll back the database news timestamp.
+    The timestamp marks the beginning of time to search a.a.m
+    """
+
+    timeStamp = time.time() - int(days)*86400
+    print timeStamp
+    db = sqlite3.connect(KEYS_DB)
+
+    with db:
+
+        cur = db.cursor()
+        cur.execute('UPDATE news SET LastReadTime = ? WHERE Id = ?', (timeStamp,1))
+
 def insertKeys(fromEmail,toEmail,otherpubkey):
     """
     Create a new keyset for the fromEmail -> toEmail route

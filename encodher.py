@@ -60,11 +60,30 @@ except (IndexError):
     print ' --get-key, -g: get key for fromEmail -> toEmail from database'
     print ' --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup'
     print ' --clone-key, -y: clone key from one route to another'
+    print ' --rollback, -b: roll back the timestamp for reading a.a.m'
     sys.exit(0)
 
 def init():
 
     dhutils.initDB()
+
+def rollback():
+
+    try:
+        days = sys.argv[2]
+    except (IndexError):
+        print 'You need to supply the number of days to roll back nntp!'
+        print 'Ex: '+sys.argv[0]+' --rollback <# of days>'
+        sys.exit(1)
+
+    try:
+        with open(KEYS_DB): pass
+    except IOError:
+        print 'No keys database (keys.db)'
+        print 'initialize the database with '+sys.argv[0]+' --init'
+        sys.exit(1)
+
+    dhutils.rollback(days)
 
 def importKey():
 
@@ -550,7 +569,9 @@ options = { '--init'   : init,
   '--fetch-aam' : aam,
   '-h' : aam,
   '--clone-key' : clone,
-  '-y' : clone
+  '-y' : clone,
+  '--rollback' : rollback,
+  '-b' : rollback
 }
 
 def main():
