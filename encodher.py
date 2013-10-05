@@ -504,7 +504,7 @@ def aam():
                 #if match: print message.fp.read()
                 if match:
 
-                    print '\nMail for: '+passphrase[1]+' from '+passphrase[0]
+                    print '\nMail for: '+passphrase[0]+' from '+passphrase[1]
                     msg = gpg.decrypt(message.fp.read(), passphrase=passphrase[2],
                           always_trust=True)
                     if not msg:
