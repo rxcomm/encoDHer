@@ -195,14 +195,14 @@ database.
 
 ### Building an executable
 
-To build an executable in the encoDHer directory, change to the encoDHer
-directory and execute the command:
+To install the executable, change to the encoDHer directory and execute the command:
 
     sudo python setup.py install
 
-This will create the executable named 'encodher'. You can then move it anywhere
-in your path for it to be usable. You will need to install the python gnupg library
+This will create the executable named 'encodher' and copy it to /usr/local/bin/encodher.
+You will need the python-gnupg library
 (version 0.3.5 or greater - see the link above) before the executable will run.
+This should be automatically installed by setup.py for most linux variants.
 
 If you don't want to download the entire source, the executable should run on
 most linux systems without any changes.  So you can grab a copy using wget:
@@ -213,8 +213,8 @@ make it executable:
 
     chmod +x encodher
 
-and it should run. To extract the python source from the executable, rename it
-as a .zip archive and unzip it, e.g.:
+and it should run if you have python-gnupg installed. To extract the python source
+from the executable, rename it as a .zip archive and unzip it, e.g.:
 
     mv encodher encodher.zip
     unzip encodher.zip
