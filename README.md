@@ -195,9 +195,10 @@ database.
 
 ### Building an executable
 
-To build an executable in the encoDHer directory, execute the command:
+To build an executable in the encoDHer directory, change to the encoDHer
+directory and execute the command:
 
-    python setup.py install
+    sudo python setup.py install
 
 This will create the executable named 'encodher'. You can then move it anywhere
 in your path for it to be usable. You will need to install the python gnupg library
