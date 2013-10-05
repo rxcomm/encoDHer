@@ -12,7 +12,7 @@ Keys are stored in the database file keys.db.
 ### Installation requirements
 
 The encodher package requires python-gnupg-0.3.5 or greater to function.
-The latest version can be obtained from:
+The latest version is documented at:
 
 http://pythonhosted.org/python-gnupg/
 
@@ -31,17 +31,25 @@ verify and import DH public keys.
 
 You should also edit the constants.py file to reflect your parameters.
 
+Install the encoDHer module using the command:
+
+    sudo python setup.py install
+
+from the encoDHer directory. An executable named encodher will be created
+and copied to /usr/local/bin/encodher.  The setup.py command should also
+automatically install python-gnupg with most linux variants.
+
 ### Startup
 
 To use the program, you must first initialize the keys database.  This is
 accomplished with the following command:
 
-    encodher.py --init
+    encodher --init
 
 Once your database is created, you can generate keys for specific recipients
 using the command:
 
-    encodher.py --gen-key sender@example.org receiver@otherexample.org
+    encodher --gen-key sender@example.org receiver@otherexample.org
 
 where your email address is sender@example.org and your intended recipient's
 email address is receiver@otherexample.org. Note that using the DH shared
@@ -52,7 +60,7 @@ pair.  So you will probably end up with several keys in the database.
 
 You can then export your signed DH public key with the command:
 
-    encodher.py --sign-pub sender@example.org receiver@otherexample.org
+    encodher --sign-pub sender@example.org receiver@otherexample.org
 
 The output will be a signed version of your public key.  You can then
 send that public key to a recipient over a non-secret channel.  An
@@ -62,7 +70,7 @@ exchanges for the encodher utility, but any nonsecure channel will work.
 When the recipient receives your DH public key, she can then import your
 key into her database using the command:
 
-    encodher.py --import textfile
+    encodher --import textfile
 
 where textfile is a text file containing your signed DH public key. Note
 that the GPG public key used to sign your DH public key must be in her
@@ -79,7 +87,7 @@ To encrypt a message, first create the plaintext in a file.  You can
 then encrypt the contents of that message with your DH shared secret
 key using the command:
 
-    encodher.py --encode-email file sender@example.org receiver@otherexample.org
+    encodher --encode-email file sender@example.org receiver@otherexample.org
 
 The email will be encrypted using symmetric aes256 encryption and output
 to file.asc.  The file is an ascii-armored pgp-format file.
@@ -87,7 +95,7 @@ to file.asc.  The file is an ascii-armored pgp-format file.
 Upon receipt of the encrypted message, the receiver can then decrypt the
 file using the command:
 
-    encodher.py --decode-email file.asc sender@example.org receiver@otherexample.org
+    encodher --decode-email file.asc sender@example.org receiver@otherexample.org
 
 The plaintext message will then be displayed.  It is probably good to note
 here that the first email address is always the message sender, and the second
@@ -95,12 +103,12 @@ is always the receiver.  So for example, if I received a message at
 alice@alice.com from my buddy bob@bob.com, the correct command to decrypt the
 message would be:
 
-    encodher.py --decode-email file.asc bob@bob.com alice@alice.com
+    encodher --decode-email file.asc bob@bob.com alice@alice.com
 
 because bob was the sender of the email and alice was the receiver.  When I
 encrypt an email to bob, the correct command is:
 
-    encodher.py --encode-email file alice@alice.com bob@bob.com
+    encodher --encode-email file alice@alice.com bob@bob.com
 
 because in this case alice is the sender and bob the receiver.
 
@@ -111,7 +119,7 @@ is useful when, for example you want to post your DH public key on a
 key table or other public place to enable multiple people to send you
 encrypted email.  You clone keys by using the command:
 
-    encodher.py --clone-key old1@first.org old2@second.org new1@third.org new2@fourth.org
+    encodher --clone-key old1@first.org old2@second.org new1@third.org new2@fourth.org
 
 This will clone your secret key from the route old1@first.org -> old2@second.org
 to the new route new1@third.org -> new2@fourth.org.  When someone wants
@@ -123,7 +131,7 @@ than the old route does.
 ### Other options
 
 Various options for key management exist.  The following list of options
-can be obtained by executing encodher.py without any arguments.
+can be obtained by executing encodher without any arguments.
 
     Options:
      --init, -i: initialize keys.db database
@@ -141,6 +149,7 @@ can be obtained by executing encodher.py without any arguments.
      --get-key, -g: get key for fromEmail -> toEmail from database
      --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup
      --clone-key, -y: clone key from one route to another
+     --rollback, -b: roll back the a.a.m last read timestamp
 
 ### Perfect forward secrecy
 
@@ -150,7 +159,7 @@ an exchange, the DH keys are destroyed by both parties, any messages
 encrypted with these keys can no longer be read, achieving PFS. Users can
 change their keys to take advantage of PFS by executing:
 
-    encodher.py --mutate-key sender@example.org receiver@example.org
+    encodher --mutate-key sender@example.org receiver@example.org
 
 This will destroy sender@example.org's old DH secret key, generate a new
 DH secret key and export the corresponding new DH public key encrypted with the
@@ -179,7 +188,7 @@ package available.
 To receive messages sent to you at a.a.m using a DH key of yours, you can
 execute the command:
 
-    encodher.py --fetch-aam
+    encodher --fetch-aam
 
 This will fetch and decrypt all a.a.m messages for each of the keys in your
 database.

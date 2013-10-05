@@ -60,7 +60,7 @@ except (IndexError):
     print ' --get-key, -g: get key for fromEmail -> toEmail from database'
     print ' --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup'
     print ' --clone-key, -y: clone key from one route to another'
-    print ' --rollback, -b: roll back the timestamp for reading a.a.m'
+    print ' --rollback, -b: roll back the a.a.m last read timestamp'
     sys.exit(0)
 
 def init():
