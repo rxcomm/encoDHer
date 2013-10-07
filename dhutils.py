@@ -231,7 +231,7 @@ def genSharedSecret(fromEmail, toEmail):
         s.update(str(sharedSecret))
         return hexlify(s.digest())
     except Exception:
-        print 'Invalid public key'
+        print 'Invalid public key: %s -> %s' % (fromEmail, toEmail)
 
 def mutateKey(fromEmail,toEmail):
     """
