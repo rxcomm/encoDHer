@@ -1,0 +1,7 @@
+0.2 -
+ * encoDHer now decrypts unicode strings properly
+ * Invalid public key exception during a.a.m search is now handled
+   gracefully (this might happen e.g. when you have created a new
+   route, but not yet imported the destination public key)
+
+0.1 - initial release

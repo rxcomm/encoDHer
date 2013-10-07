@@ -12,12 +12,10 @@ if not os.path.exists(config_path):
 HOME = config_path # should be ~/.config/encoDHer for most installs
 
 # GPG public keyring
-KEYRING = user_path+'/.gnupg/pubring.gpg' # use this for default GPG keyring
-# KEYRING = 'pubring.gpg' # use this if you keep keyrings in ~/.config/encoDHer
+KEYRING = user_path+'/.gnupg/pubring.gpg'
 
 # GPG secret keyring
-SECRET_KEYRING = user_path+'/.gnupg/secring.gpg' # use this for default GPG keyring
-# SECRET_KEYRING = 'secring.gpg' # use this if you keep keyrings in ~/.config/encoDHer
+SECRET_KEYRING = user_path+'/.gnupg/secring.gpg'
 
 # GPG binary
 #GPGBINARY = '/usr/bin/gpg'
