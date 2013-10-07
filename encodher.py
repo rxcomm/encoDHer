@@ -38,7 +38,8 @@ import nntplib
 from constants import *
 
 gpg = gnupg.GPG(gnupghome=HOME, gpgbinary=GPGBINARY, keyring=KEYRING,
-                secret_keyring=SECRET_KEYRING, options='--throw-keyids')
+                secret_keyring=SECRET_KEYRING, options=['--throw-keyids',
+                '--personal-digest-preferences=sha256'])
 gpg.encoding = 'utf-8'
 
 try:
