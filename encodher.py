@@ -494,6 +494,7 @@ def aam():
             file = StringIO.StringIO(text)
 
             message = rfc822.Message(file)
+            match = False
 
             for passphrase in passphrases:
                 message.rewindbody()
@@ -510,7 +511,7 @@ def aam():
                     if not msg:
                         print 'Bad shared secret!'
                         sys.exit(1)
-                    print '\n'+str(msg)
+                    print '\n'+unicode(msg)
     print 'End of messages.'
 
 def clone():

@@ -294,7 +294,9 @@ def getListOfKeys():
         cur.execute("SELECT * FROM keys")
         rows = cur.fetchall()
         for row in rows:
-            listOfKeys.append((row[0],row[1],genSharedSecret(row[0],row[1])))
+            sSecret = genSharedSecret(row[0],row[1])
+            if sSecret:
+                listOfKeys.append((row[0],row[1],sSecret))
         return listOfKeys
 
 if __name__=="__main__":
