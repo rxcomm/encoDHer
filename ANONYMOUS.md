@@ -104,22 +104,22 @@ is used to do this.
 
 ### FAQ:
 
-1. Why symmetric encryption?  Isn't public-key good enough if we use --throw-keyids as an option to GPG?
+Q. Why symmetric encryption?  Isn't public-key good enough if we use --throw-keyids as an option to GPG?
 
   * The symmetric encryption with dynamic DH shared secrets provides perfect forward secrecy.  Once the DH key pair is destroyed, old messages can't be read, even if either Alice or Bob is compromised. This would not be the case if we used only public key encryption.
 
   The one possible exception to this is the first two messages - since both DH public keys are assumed to be available long-term on a key tablet, if either Alice or Bob is compromised, the first two messages could be read by an attacker.  To compensate for this, it is recommended that the first two messages be throw-away messages, used only to exchange new DH public keys.
 
-2. Why use mixmaster/tor combination to submit messages to alt.anonymous.messages? Isn't one or the other good enough?
+Q. Why use mixmaster/tor combination to submit messages to alt.anonymous.messages? Isn't one or the other good enough?
 
   * Mixmaster is vulnerable to tagging attacks. Using tor as a submission channel to mixmaster prevents tagged messages from being traced to the sender. Tor is vulnerable to traffic analysis due to its low latency.  Using high-latency mixmaster reduces the effectiveness of these attacks.
   Note that the submission to the mixmaster network is via smtp.  As a result, this should be done using ssl over tor to further prevent traffic analysis and mitm attacks. Also, tor blocks port 25, so open smtp can't be done anyway.
 
-3. Why use tor to search alt.anonymous.messages? If all messages are downloaded, no one can tell which of them you are interested in, can they?
+Q. Why use tor to search alt.anonymous.messages? If all messages are downloaded, no one can tell which of them you are interested in, can they?
 
   * That is true, but our threat model includes not wanting anyone to know that Alice and Bob are communicating. tor anonymizes the search of alt.anonymous.messages.
 
-4. Why use alt.anonymous.messages at all?  Couldn't Alice send her message directly to Bob?
+Q. Why use alt.anonymous.messages at all?  Couldn't Alice send her message directly to Bob?
 
   * Yes, but that is difficult to do anonymously.
 
@@ -127,7 +127,7 @@ is used to do this.
 
   * Yes.  You would simply start over if this happened.
 
-5. What does a typical message to be submitted to alt.anonymous.messages look like?
+Q. What does a typical message to be submitted to alt.anonymous.messages look like?
   * Here is an example.  The message would be submitted via mixmaster using the command:
 ```
 mixmaster -c1 < message.txt
