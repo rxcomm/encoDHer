@@ -39,7 +39,7 @@ from constants import *
 
 gpg = gnupg.GPG(gnupghome=HOME, gpgbinary=GPGBINARY, keyring=KEYRING,
                 secret_keyring=SECRET_KEYRING, options=['--throw-keyids',
-                '--personal-digest-preferences=sha256'])
+                '--personal-digest-preferences=sha256','--s2k-digest-algo=sha256'])
 gpg.encoding = 'utf-8'
 
 try:

@@ -7,7 +7,7 @@ import os
 import pwd
 
 setup(name='encoDHer',
-      version='0.1',
+      version='0.2',
       description='symmetric email encryption utility for python',
       author='David R. Andersen',
       url='https://github.com/rxcomm/encoDHer',

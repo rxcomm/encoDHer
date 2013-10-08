@@ -1,7 +1,8 @@
-0.2 -
+0.2 - Oct. 8, 2013
  * encoDHer now decrypts unicode strings properly
  * Invalid public key exception during a.a.m search is now handled
    gracefully (this might happen e.g. when you have created a new
    route, but not yet imported the destination public key)
+ * s2k hash has been changed to sha256
 
 0.1 - initial release
