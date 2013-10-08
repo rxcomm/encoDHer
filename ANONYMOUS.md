@@ -171,7 +171,8 @@ via mixmaster using the command:
   where message.txt contains the following
 contents:
 
-```To: mail2news@dizum.com,mail2news@m2n.mixmin.net
+```
+To: mail2news@dizum.com,mail2news@m2n.mixmin.net
 Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2
 Newsgroups: alt.anonymous.messages
 X-No-Archive: Yes
