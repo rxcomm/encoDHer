@@ -124,7 +124,7 @@ for this, it is recommended that the first two messages
 be throw-away messages, used only to exchange new
 DH public keys.
 
-2. Why use mixmaster/tor combination to submit
+1. Why use mixmaster/tor combination to submit
 messages to alt.anonymous.messages? Isn't one
 or the other good enough?
 
@@ -141,7 +141,7 @@ over tor to further prevent traffic analysis and mitm
 attacks. Also, tor blocks port 25, so open smtp can't
 be done anyway.
 
-3. Why use tor to search alt.anonymous.messages? If
+1. Why use tor to search alt.anonymous.messages? If
 all messages are downloaded, no one can tell which of
 them you are interested in, can they?
 
@@ -149,18 +149,18 @@ them you are interested in, can they?
 anyone to know that Alice and Bob are communicating.
 tor anonymizes the search of alt.anonymous.messages.
 
-4. Why use alt.anonymous.messages at all?  Couldn't
+1. Why use alt.anonymous.messages at all?  Couldn't
 Alice send her message directly to Bob?
 
   * Yes, but that is difficult to do anonymously.
 
-5. What happens if the chain is broken - and one
+1. What happens if the chain is broken - and one
 of the messages gets lost.  Doesn't that break the
 sequential DH shared secret bootstrapping?
 
   * Yes.  You would simply start over if this happened.
 
-6. What does a typical message to be submitted to
+1. What does a typical message to be submitted to
 alt.anonymous.messages look like?
 
   * Here is an example.  The message would be submitted
@@ -171,25 +171,26 @@ via mixmaster using the command:
   where message.txt contains the following
 contents:
 
-    To: mail2news@dizum.com,mail2news@m2n.mixmin.net
-    Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2
-    Newsgroups: alt.anonymous.messages
-    X-No-Archive: Yes
+```To: mail2news@dizum.com,mail2news@m2n.mixmin.net
+Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2
+Newsgroups: alt.anonymous.messages
+X-No-Archive: Yes
 
-    -----BEGIN PGP MESSAGE-----
+-----BEGIN PGP MESSAGE-----
 
-    jA0ECQMIJ1NWy0QcizvU0usB6xNTTWPjDmgEnRiI1kU/ROrWkeXKpMsO//VLYhqs
-    kogetdM0JjLQuFHJBdEoLiR2jP/L/Avaer1DDq0MymnolasNhq5U2uOZjC6O8u3a
-    /RPgt3iYSiMnTQbW+cLN+TBs3pO4fasVFJ0tTHJZkse+daCMmRlm3c585mFdwuNE
-    0ReQFJnBgUy0wFQGb4SAhVlOZhRDFq89vYCbbo3IoPUbycjuV3yjYNBlnqOnC9SL
-    ...
-    6fvQLr+rx01QrvXodriMG6gbUKh6342z9Yhua8aN+MtQMwWHpTVf4eP8xPhxjJF6
-    RhSOkC/xdzthjp5g4Ii7yJ0FsuKX/APubMHIw3aNPDjJ4+eUN/Q2KrcQIgoAM661
-    DDGBFx03kxMIlVktkF+zZ12Bnxo+YdE1I64ONVv3v38Urc07qperf1eGo5kfvwQI
-    mp/CAc7AhgdYg7TRasP3v6PRj3Ac+hXObUlI98mNyvOnqhDAKtv9gbGyN2n8RHmK
-    IOck
-    =AUXa
-    -----END PGP MESSAGE-----
+jA0ECQMIJ1NWy0QcizvU0usB6xNTTWPjDmgEnRiI1kU/ROrWkeXKpMsO//VLYhqs
+kogetdM0JjLQuFHJBdEoLiR2jP/L/Avaer1DDq0MymnolasNhq5U2uOZjC6O8u3a
+/RPgt3iYSiMnTQbW+cLN+TBs3pO4fasVFJ0tTHJZkse+daCMmRlm3c585mFdwuNE
+0ReQFJnBgUy0wFQGb4SAhVlOZhRDFq89vYCbbo3IoPUbycjuV3yjYNBlnqOnC9SL
+...
+6fvQLr+rx01QrvXodriMG6gbUKh6342z9Yhua8aN+MtQMwWHpTVf4eP8xPhxjJF6
+RhSOkC/xdzthjp5g4Ii7yJ0FsuKX/APubMHIw3aNPDjJ4+eUN/Q2KrcQIgoAM661
+DDGBFx03kxMIlVktkF+zZ12Bnxo+YdE1I64ONVv3v38Urc07qperf1eGo5kfvwQI
+mp/CAc7AhgdYg7TRasP3v6PRj3Ac+hXObUlI98mNyvOnqhDAKtv9gbGyN2n8RHmK
+IOck
+=AUXa
+-----END PGP MESSAGE-----
+```
 
   The included headers
 will:
