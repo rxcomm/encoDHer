@@ -1,7 +1,7 @@
 Understanding encoDHer
 ===
 
-### 1. Threat model.
+### 1. Threat model
 
 Alice and Bob want to communicate.  They do not want others to
 read their communication, and they do not want each other to
@@ -14,7 +14,7 @@ The owner of the nymserver has the set of encryption keys
 that is used to guarantee anonymity, and so is vulnerable to
 an attack from authority.
 
-### 2. Overview of communication cycle.
+### 2. Overview of communication cycle
 
 Alice and Bob decide to communicate.  Their communication is
 somewhat voluminous (several few-page pdf's are being exchanged).
@@ -108,7 +108,7 @@ is used to do this.
 enough if we use --throw-keyids as an option to
 GPG?
 
-A: The symmetric encryption with dynamic DH shared
+  * The symmetric encryption with dynamic DH shared
 secrets provides perfect forward secrecy.  Once
 the DH key pair is destroyed, old messages can't be
 read, even if either Alice or Bob is compromised.
@@ -128,7 +128,7 @@ DH public keys.
 messages to alt.anonymous.messages? Isn't one
 or the other good enough?
 
-A: Mixmaster is vulnerable to tagging attacks. Using
+  * Mixmaster is vulnerable to tagging attacks. Using
 tor as a submission channel to mixmaster prevents
 tagged messages from being traced to the sender. Tor
 is vulnerable to traffic analysis due to its low
@@ -145,35 +145,35 @@ be done anyway.
 all messages are downloaded, no one can tell which of
 them you are interested in, can they?
 
-A: That is true, but our threat model includes not wanting
+  * That is true, but our threat model includes not wanting
 anyone to know that Alice and Bob are communicating.
 tor anonymizes the search of alt.anonymous.messages.
 
 4. Why use alt.anonymous.messages at all?  Couldn't
 Alice send her message directly to Bob?
 
-A: Yes, but that is difficult to do anonymously.
+  * Yes, but that is difficult to do anonymously.
 
 5. What happens if the chain is broken - and one
 of the messages gets lost.  Doesn't that break the
 sequential DH shared secret bootstrapping?
 
-A: Yes.  You would simply start over if this happened.
+  * Yes.  You would simply start over if this happened.
 
 6. What does a typical message to be submitted to
 alt.anonymous.messages look like?
 
-A: Here is an example.  The message would be submitted
+  * Here is an example.  The message would be submitted
 via mixmaster using the command:
 
      mixmaster -c1 < message.txt
 
 where message.txt contains the following contents:
 
-To: mail2news@dizum.com,mail2news@m2n.mixmin.net
-Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2
-Newsgroups: alt.anonymous.messages
-X-No-Archive: Yes
+To: mail2news@dizum.com,mail2news@m2n.mixmin.net  
+Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2  
+Newsgroups: alt.anonymous.messages  
+X-No-Archive: Yes  
 
 -----BEGIN PGP MESSAGE-----
 
@@ -192,8 +192,8 @@ IOck
 
 The included headers will:
 
-1) send the message to two different mail2news servers.
-2) have hsub subject c73...
-3) will be posted at alt.anonymous.messages
+1) send the message to two different mail2news servers  
+2) have hsub subject c73...  
+3) will be posted at alt.anonymous.messages  
 4) will be (hopefully - although it doesn't really matter)
    unarchived in one week.
