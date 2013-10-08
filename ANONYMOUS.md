@@ -115,7 +115,7 @@ read, even if either Alice or Bob is compromised.
 This would not be the case if we used only public
 key encryption.
 
-The one possible exception to this is the first
+  The one possible exception to this is the first
 two messages - since both DH public keys are assumed
 to be available long-term on a key tablet, if
 either Alice or Bob is compromised, the first two
@@ -135,7 +135,7 @@ is vulnerable to traffic analysis due to its low
 latency.  Using high-latency mixmaster reduces the
 effectiveness of these attacks.
 
-Note that the submission to the mixmaster network is
+  Note that the submission to the mixmaster network is
 via smtp.  As a result, this should be done using ssl
 over tor to further prevent traffic analysis and mitm
 attacks. Also, tor blocks port 25, so open smtp can't
@@ -168,32 +168,34 @@ via mixmaster using the command:
 
      mixmaster -c1 < message.txt
 
-where message.txt contains the following contents:
+  where message.txt contains the following
+contents:
 
-To: mail2news@dizum.com,mail2news@m2n.mixmin.net  
-Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2  
-Newsgroups: alt.anonymous.messages  
-X-No-Archive: Yes  
+    To: mail2news@dizum.com,mail2news@m2n.mixmin.net
+    Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2
+    Newsgroups: alt.anonymous.messages
+    X-No-Archive: Yes
 
------BEGIN PGP MESSAGE-----
+    -----BEGIN PGP MESSAGE-----
 
-jA0ECQMIJ1NWy0QcizvU0usB6xNTTWPjDmgEnRiI1kU/ROrWkeXKpMsO//VLYhqs
-kogetdM0JjLQuFHJBdEoLiR2jP/L/Avaer1DDq0MymnolasNhq5U2uOZjC6O8u3a
-/RPgt3iYSiMnTQbW+cLN+TBs3pO4fasVFJ0tTHJZkse+daCMmRlm3c585mFdwuNE
-0ReQFJnBgUy0wFQGb4SAhVlOZhRDFq89vYCbbo3IoPUbycjuV3yjYNBlnqOnC9SL
-...
-6fvQLr+rx01QrvXodriMG6gbUKh6342z9Yhua8aN+MtQMwWHpTVf4eP8xPhxjJF6
-RhSOkC/xdzthjp5g4Ii7yJ0FsuKX/APubMHIw3aNPDjJ4+eUN/Q2KrcQIgoAM661
-DDGBFx03kxMIlVktkF+zZ12Bnxo+YdE1I64ONVv3v38Urc07qperf1eGo5kfvwQI
-mp/CAc7AhgdYg7TRasP3v6PRj3Ac+hXObUlI98mNyvOnqhDAKtv9gbGyN2n8RHmK
-IOck
-=AUXa
------END PGP MESSAGE-----
+    jA0ECQMIJ1NWy0QcizvU0usB6xNTTWPjDmgEnRiI1kU/ROrWkeXKpMsO//VLYhqs
+    kogetdM0JjLQuFHJBdEoLiR2jP/L/Avaer1DDq0MymnolasNhq5U2uOZjC6O8u3a
+    /RPgt3iYSiMnTQbW+cLN+TBs3pO4fasVFJ0tTHJZkse+daCMmRlm3c585mFdwuNE
+    0ReQFJnBgUy0wFQGb4SAhVlOZhRDFq89vYCbbo3IoPUbycjuV3yjYNBlnqOnC9SL
+    ...
+    6fvQLr+rx01QrvXodriMG6gbUKh6342z9Yhua8aN+MtQMwWHpTVf4eP8xPhxjJF6
+    RhSOkC/xdzthjp5g4Ii7yJ0FsuKX/APubMHIw3aNPDjJ4+eUN/Q2KrcQIgoAM661
+    DDGBFx03kxMIlVktkF+zZ12Bnxo+YdE1I64ONVv3v38Urc07qperf1eGo5kfvwQI
+    mp/CAc7AhgdYg7TRasP3v6PRj3Ac+hXObUlI98mNyvOnqhDAKtv9gbGyN2n8RHmK
+    IOck
+    =AUXa
+    -----END PGP MESSAGE-----
 
-The included headers will:
+  The included headers
+will:
 
-1) send the message to two different mail2news servers  
-2) have hsub subject c73...  
-3) will be posted at alt.anonymous.messages  
-4) will be (hopefully - although it doesn't really matter)
-   unarchived in one week.
+  1. send the message to two different mail2news servers  
+  2. have hsub subject c73...  
+  3. will be posted at alt.anonymous.messages  
+  4. will be (hopefully - although it doesn't really matter)
+unarchived in one week.
