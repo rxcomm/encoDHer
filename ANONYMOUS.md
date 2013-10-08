@@ -96,108 +96,67 @@ time period.  Then Alice could send multiple
 messages to Bob during that time period.  The cost
 is of course, reduction in perfect forward secrecy.
 
-3. In practice, when PFS it is easier to generate a new DH secret
+3. In practice, when PFS is desired, it is easier to generate a new DH secret
 key and send it as a separate message, rather than including
 it in the plaintext message.  This is actually the way
-that encoDHer has implemented PFS.  The option --mutate-key
+that encoDHer has implemented PFS.  The option ```--mutate-key```
 is used to do this.
 
 ### FAQ:
 
-1. Why symmetric encryption?  Isn't public-key good
-enough if we use --throw-keyids as an option to
-GPG?
+1. Why symmetric encryption?  Isn't public-key good enough if we use --throw-keyids as an option to GPG?
 
-  * The symmetric encryption with dynamic DH shared
-secrets provides perfect forward secrecy.  Once
-the DH key pair is destroyed, old messages can't be
-read, even if either Alice or Bob is compromised.
-This would not be the case if we used only public
-key encryption.
+  * The symmetric encryption with dynamic DH shared secrets provides perfect forward secrecy.  Once the DH key pair is destroyed, old messages can't be read, even if either Alice or Bob is compromised. This would not be the case if we used only public key encryption.
 
-  The one possible exception to this is the first
-two messages - since both DH public keys are assumed
-to be available long-term on a key tablet, if
-either Alice or Bob is compromised, the first two
-messages could be read by an attacker.  To compensate
-for this, it is recommended that the first two messages
-be throw-away messages, used only to exchange new
-DH public keys.
+  The one possible exception to this is the first two messages - since both DH public keys are assumed to be available long-term on a key tablet, if either Alice or Bob is compromised, the first two messages could be read by an attacker.  To compensate for this, it is recommended that the first two messages be throw-away messages, used only to exchange new DH public keys.
 
-1. Why use mixmaster/tor combination to submit
-messages to alt.anonymous.messages? Isn't one
-or the other good enough?
+1. Why use mixmaster/tor combination to submit messages to alt.anonymous.messages? Isn't one or the other good enough?
 
-  * Mixmaster is vulnerable to tagging attacks. Using
-tor as a submission channel to mixmaster prevents
-tagged messages from being traced to the sender. Tor
-is vulnerable to traffic analysis due to its low
-latency.  Using high-latency mixmaster reduces the
-effectiveness of these attacks.
+  * Mixmaster is vulnerable to tagging attacks. Using tor as a submission channel to mixmaster prevents tagged messages from being traced to the sender. Tor is vulnerable to traffic analysis due to its low latency.  Using high-latency mixmaster reduces the effectiveness of these attacks.
+  Note that the submission to the mixmaster network is via smtp.  As a result, this should be done using ssl over tor to further prevent traffic analysis and mitm attacks. Also, tor blocks port 25, so open smtp can't be done anyway.
 
-  Note that the submission to the mixmaster network is
-via smtp.  As a result, this should be done using ssl
-over tor to further prevent traffic analysis and mitm
-attacks. Also, tor blocks port 25, so open smtp can't
-be done anyway.
+1. Why use tor to search alt.anonymous.messages? If all messages are downloaded, no one can tell which of them you are interested in, can they?
 
-1. Why use tor to search alt.anonymous.messages? If
-all messages are downloaded, no one can tell which of
-them you are interested in, can they?
+  * That is true, but our threat model includes not wanting anyone to know that Alice and Bob are communicating. tor anonymizes the search of alt.anonymous.messages.
 
-  * That is true, but our threat model includes not wanting
-anyone to know that Alice and Bob are communicating.
-tor anonymizes the search of alt.anonymous.messages.
-
-1. Why use alt.anonymous.messages at all?  Couldn't
-Alice send her message directly to Bob?
+1. Why use alt.anonymous.messages at all?  Couldn't Alice send her message directly to Bob?
 
   * Yes, but that is difficult to do anonymously.
 
-1. What happens if the chain is broken - and one
-of the messages gets lost.  Doesn't that break the
-sequential DH shared secret bootstrapping?
+1. What happens if the chain is broken - and one of the messages gets lost.  Doesn't that break the sequential DH shared secret bootstrapping?
 
   * Yes.  You would simply start over if this happened.
 
-1. What does a typical message to be submitted to
-alt.anonymous.messages look like?
-
-  * Here is an example.  The message would be submitted
-via mixmaster using the command:
-
-     mixmaster -c1 < message.txt
-
-  where message.txt contains the following
-contents:
-
+1. What does a typical message to be submitted to alt.anonymous.messages look like?
+  * Here is an example.  The message would be submitted via mixmaster using the command:
 ```
-To: mail2news@dizum.com,mail2news@m2n.mixmin.net
-Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2
-Newsgroups: alt.anonymous.messages
-X-No-Archive: Yes
-
------BEGIN PGP MESSAGE-----
-
-jA0ECQMIJ1NWy0QcizvU0usB6xNTTWPjDmgEnRiI1kU/ROrWkeXKpMsO//VLYhqs
-kogetdM0JjLQuFHJBdEoLiR2jP/L/Avaer1DDq0MymnolasNhq5U2uOZjC6O8u3a
-/RPgt3iYSiMnTQbW+cLN+TBs3pO4fasVFJ0tTHJZkse+daCMmRlm3c585mFdwuNE
-0ReQFJnBgUy0wFQGb4SAhVlOZhRDFq89vYCbbo3IoPUbycjuV3yjYNBlnqOnC9SL
-...
-6fvQLr+rx01QrvXodriMG6gbUKh6342z9Yhua8aN+MtQMwWHpTVf4eP8xPhxjJF6
-RhSOkC/xdzthjp5g4Ii7yJ0FsuKX/APubMHIw3aNPDjJ4+eUN/Q2KrcQIgoAM661
-DDGBFx03kxMIlVktkF+zZ12Bnxo+YdE1I64ONVv3v38Urc07qperf1eGo5kfvwQI
-mp/CAc7AhgdYg7TRasP3v6PRj3Ac+hXObUlI98mNyvOnqhDAKtv9gbGyN2n8RHmK
-IOck
-=AUXa
------END PGP MESSAGE-----
+mixmaster -c1 < message.txt
 ```
+  where message.txt contains the following contents:
+```
+  To: mail2news@dizum.com,mail2news@m2n.mixmin.net
+  Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2
+  Newsgroups: alt.anonymous.messages
+  X-No-Archive: Yes
 
-  The included headers
-will:
+  -----BEGIN PGP MESSAGE-----
+
+  jA0ECQMIJ1NWy0QcizvU0usB6xNTTWPjDmgEnRiI1kU/ROrWkeXKpMsO//VLYhqs
+  kogetdM0JjLQuFHJBdEoLiR2jP/L/Avaer1DDq0MymnolasNhq5U2uOZjC6O8u3a
+  /RPgt3iYSiMnTQbW+cLN+TBs3pO4fasVFJ0tTHJZkse+daCMmRlm3c585mFdwuNE
+  0ReQFJnBgUy0wFQGb4SAhVlOZhRDFq89vYCbbo3IoPUbycjuV3yjYNBlnqOnC9SL
+  ...
+  6fvQLr+rx01QrvXodriMG6gbUKh6342z9Yhua8aN+MtQMwWHpTVf4eP8xPhxjJF6
+  RhSOkC/xdzthjp5g4Ii7yJ0FsuKX/APubMHIw3aNPDjJ4+eUN/Q2KrcQIgoAM661
+  DDGBFx03kxMIlVktkF+zZ12Bnxo+YdE1I64ONVv3v38Urc07qperf1eGo5kfvwQI
+  mp/CAc7AhgdYg7TRasP3v6PRj3Ac+hXObUlI98mNyvOnqhDAKtv9gbGyN2n8RHmK
+  IOck
+  =AUXa
+  -----END PGP MESSAGE-----
+```
+  The included headers will:
 
   1. send the message to two different mail2news servers  
   2. have hsub subject c73...  
   3. will be posted at alt.anonymous.messages  
-  4. will be (hopefully - although it doesn't really matter)
-unarchived in one week.
+  4. will be (hopefully - although it doesn't really matter) unarchived in one week.
