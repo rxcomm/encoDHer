@@ -110,16 +110,16 @@ is used to do this.
 
   The one possible exception to this is the first two messages - since both DH public keys are assumed to be available long-term on a key tablet, if either Alice or Bob is compromised, the first two messages could be read by an attacker.  To compensate for this, it is recommended that the first two messages be throw-away messages, used only to exchange new DH public keys.
 
-1. Why use mixmaster/tor combination to submit messages to alt.anonymous.messages? Isn't one or the other good enough?
+2. Why use mixmaster/tor combination to submit messages to alt.anonymous.messages? Isn't one or the other good enough?
 
   * Mixmaster is vulnerable to tagging attacks. Using tor as a submission channel to mixmaster prevents tagged messages from being traced to the sender. Tor is vulnerable to traffic analysis due to its low latency.  Using high-latency mixmaster reduces the effectiveness of these attacks.
   Note that the submission to the mixmaster network is via smtp.  As a result, this should be done using ssl over tor to further prevent traffic analysis and mitm attacks. Also, tor blocks port 25, so open smtp can't be done anyway.
 
-1. Why use tor to search alt.anonymous.messages? If all messages are downloaded, no one can tell which of them you are interested in, can they?
+3. Why use tor to search alt.anonymous.messages? If all messages are downloaded, no one can tell which of them you are interested in, can they?
 
   * That is true, but our threat model includes not wanting anyone to know that Alice and Bob are communicating. tor anonymizes the search of alt.anonymous.messages.
 
-1. Why use alt.anonymous.messages at all?  Couldn't Alice send her message directly to Bob?
+4. Why use alt.anonymous.messages at all?  Couldn't Alice send her message directly to Bob?
 
   * Yes, but that is difficult to do anonymously.
 
@@ -127,12 +127,13 @@ is used to do this.
 
   * Yes.  You would simply start over if this happened.
 
-1. What does a typical message to be submitted to alt.anonymous.messages look like?
+5. What does a typical message to be submitted to alt.anonymous.messages look like?
   * Here is an example.  The message would be submitted via mixmaster using the command:
 ```
 mixmaster -c1 < message.txt
 ```
   where message.txt contains the following contents:
+
 ```
   To: mail2news@dizum.com,mail2news@m2n.mixmin.net
   Subject: c73dc0a5f92ca70b0b0a0ee98eaec862901f25f3cc6796e2
@@ -154,6 +155,7 @@ mixmaster -c1 < message.txt
   =AUXa
   -----END PGP MESSAGE-----
 ```
+
   The included headers will:
 
   1. send the message to two different mail2news servers  
