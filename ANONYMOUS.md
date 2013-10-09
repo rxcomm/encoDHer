@@ -129,7 +129,7 @@ Q. Why use alt.anonymous.messages at all?  Couldn't Alice send her message direc
 
   * Yes, but that is difficult to do anonymously.
 
-1. What happens if the chain is broken - and one of the messages gets lost.  Doesn't that break the sequential DH shared secret bootstrapping?
+Q. What happens if the chain is broken - and one of the messages gets lost.  Doesn't that break the sequential DH shared secret bootstrapping?
 
   * Yes.  You would simply start over if this happened.
 
