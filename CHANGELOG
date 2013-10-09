@@ -5,5 +5,13 @@
    route, but not yet imported the destination public key)
  * s2k hash has been changed to sha256
  * --list-keys changed to --list-routes
+ * added encodher DH and GPG public keys 
+
+   $ gpg --fingerprint encodher
+   pub   8192R/9F16F7B2 2013-10-09 [expires: 2018-10-08]
+         Key fingerprint = BB8C 19BB 09C1 19FE 72AA  06F7 8BD1 334F 9F16 F7B2
+   uid                  encodher
+   sub   8192R/8E37D228 2013-10-09 [expires: 2018-10-08]
+   sub   8192R/AD535BD8 2013-10-09 [expires: 2018-10-08]
 
 0.1 - initial release

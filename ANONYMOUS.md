@@ -30,8 +30,8 @@ rather email-type communication is required.
 Prior to any communication occurring, Alice and Bob will have
 created GPG key pairs for themselves that are not posted on any
 public media (including keyservers) that can be traced back
-to them.  We will assume the uids for these keys are @alice and
-@bob (GPG can create these uids with the --allow-freeform-uid
+to them.  We will assume the uids for these keys are alice and
+bob (GPG can create these uids with the ```--allow-freeform-uid```
 option). Further, both Bob and Alice generate a Diffie-Hellmann
 key pair for themselves.
 

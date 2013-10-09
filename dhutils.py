@@ -90,6 +90,7 @@ def insertKeys(fromEmail,toEmail,otherpubkey):
         cur.execute('CREATE TABLE IF NOT EXISTS keys (FromEmail TEXT, ToEmail TEXT, SecretKey TEXT, PublicKey TEXT, OtherPublicKey TEXT, TimeStamp INT)')
         cur.execute('INSERT INTO keys VALUES(?,?,?,?,?,?)', (fromEmail,toEmail,privkey,mypubkey,otherpubkey,timeStamp))
 
+        cur.execute("SELECT * FROM keys")
         rows = cur.fetchall()
         print 'You have %d total routes' % len(rows)
 
