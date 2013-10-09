@@ -143,7 +143,7 @@ can be obtained by executing encodher without any arguments.
      --change-pubkey, -p: change public key for fromEmail -> toEmail
      --encode-email, -e: symmetrically encode a file for fromEmail -> toEmail
      --decode-email, -d: symmetrically decode a file for fromEmail -> toEmail
-     --list-keys, -l: list all keys in database
+     --list-routes, -l: list all routes in database
      --gen-secret, -c: generate shared secret for fromEmail -> toEmail
      --gen-key, -n: generate a new key for fromEmail -> toEmail
      --get-key, -g: get key for fromEmail -> toEmail from database

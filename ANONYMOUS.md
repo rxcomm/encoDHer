@@ -1,5 +1,11 @@
-Understanding encoDHer
+Using encoDHer for anonymous communication
 ===
+
+In this document, we present a brief overview of how
+to use encoDHer to communicate anonymously.  We first
+outline the threat model, then summarize what a typical
+communication cycle would look like, and finally conclude
+with answers to a few frequently-asked questions.
 
 ### 1. Threat model
 

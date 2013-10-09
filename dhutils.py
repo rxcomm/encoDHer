@@ -90,8 +90,8 @@ def insertKeys(fromEmail,toEmail,otherpubkey):
         cur.execute('CREATE TABLE IF NOT EXISTS keys (FromEmail TEXT, ToEmail TEXT, SecretKey TEXT, PublicKey TEXT, OtherPublicKey TEXT, TimeStamp INT)')
         cur.execute('INSERT INTO keys VALUES(?,?,?,?,?,?)', (fromEmail,toEmail,privkey,mypubkey,otherpubkey,timeStamp))
 
-        lid = cur.lastrowid
-        print 'You have %d total keys' % lid
+        rows = cur.fetchall()
+        print 'You have %d total routes' % len(rows)
 
 def getKeys(fromEmail,toEmail):
     """
@@ -124,6 +124,7 @@ def listKeys():
         rows = cur.fetchall()
         for row in rows:
             print row[0]+' -> '+row[1]
+        print 'You have %d total routes' % len(rows)
 
 def cloneKey(fromEmail,toEmail,newFromEmail,newToEmail):
    """

@@ -55,7 +55,7 @@ except (IndexError):
     print ' --change-pubkey, -p: change public key for fromEmail -> toEmail'
     print ' --encode-email, -e: symmetrically encode a file for fromEmail -> toEmail'
     print ' --decode-email, -d: symmetrically decode a file for fromEmail -> toEmail'
-    print ' --list-keys, -l: list all keys in database'
+    print ' --list-routes, -l: list all routes in database'
     print ' --gen-secret, -c: generate shared secret for fromEmail -> toEmail'
     print ' --gen-key, -n: generate a new key for fromEmail -> toEmail'
     print ' --get-key, -g: get key for fromEmail -> toEmail from database'
@@ -332,7 +332,7 @@ def list_keys():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    print 'Listing of all keys in database:'
+    print 'Listing of all routes in database:'
     dhutils.listKeys()
 
 def secret():
@@ -556,7 +556,7 @@ options = { '--init'   : init,
   '-e' : hs,
   '--decode-email' : hsd,
   '-d' : hsd,
-  '--list-keys' : list_keys,
+  '--list-routes' : list_keys,
   '-l' : list_keys,
   '--gen-secret' : secret,
   '-c' : secret,

@@ -4,5 +4,6 @@
    gracefully (this might happen e.g. when you have created a new
    route, but not yet imported the destination public key)
  * s2k hash has been changed to sha256
+ * --list-keys changed to --list-routes
 
 0.1 - initial release
