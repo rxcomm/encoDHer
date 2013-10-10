@@ -28,6 +28,8 @@ import os
 import time
 import sys
 import hashlib
+import gnupg
+import getpass
 from binascii import hexlify
 from constants import *
 
@@ -41,7 +43,7 @@ def makeKeys():
     pubkey = a.publicKey
     return str(privkey), str(pubkey)
 
-def initDB():
+def initDB(gpg,dbpassphrase):
     """
     Initialize the database with the keys table format and
     a timestamp marking the beginning of time to search a.a.m
@@ -49,7 +51,12 @@ def initDB():
 
     timeStamp = time.time()
     print timeStamp
-    db = sqlite3.connect(KEYS_DB)
+
+    try:
+        with open(KEYS_DB): pass
+        db = openDB(KEYS_DB,gpg,dbpassphrase)
+    except IOError:
+        db = sqlite3.connect(':memory:')
 
     with db:
 
@@ -57,9 +64,10 @@ def initDB():
         cur.execute('CREATE TABLE IF NOT EXISTS keys (FromEmail TEXT, ToEmail TEXT, SecretKey TEXT, PublicKey TEXT, OtherPublicKey TEXT, TimeStamp FLOAT)')
         cur.execute('CREATE TABLE IF NOT EXISTS news (Id INTEGER PRIMARY KEY, LastReadTime FLOAT)')
         cur.execute('INSERT OR REPLACE INTO news (Id, LastReadTime) VALUES(?,?)', (1,timeStamp))
+    closeDB(db, KEYS_DB, gpg,dbpassphrase)
     os.chmod(KEYS_DB,0600)
 
-def rollback(days):
+def rollback(days,gpg,dbpassphrase):
     """
     Roll back the database news timestamp.
     The timestamp marks the beginning of time to search a.a.m
@@ -67,19 +75,20 @@ def rollback(days):
 
     timeStamp = time.time() - int(days)*86400
     print timeStamp
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB,gpg,dbpassphrase)
 
     with db:
 
         cur = db.cursor()
         cur.execute('UPDATE news SET LastReadTime = ? WHERE Id = ?', (timeStamp,1))
+    closeDB(db, KEYS_DB, gpg,dbpassphrase)
 
-def insertKeys(fromEmail,toEmail,otherpubkey):
+def insertKeys(fromEmail,toEmail,otherpubkey,gpg,dbpassphrase):
     """
     Create a new keyset for the fromEmail -> toEmail route
     """
 
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
     otherpubkey = str(otherpubkey)
 
     with db:
@@ -93,14 +102,15 @@ def insertKeys(fromEmail,toEmail,otherpubkey):
         cur.execute("SELECT * FROM keys")
         rows = cur.fetchall()
         print 'You have %d total routes' % len(rows)
+    closeDB(db, KEYS_DB, gpg,dbpassphrase)
 
-def getKeys(fromEmail,toEmail):
+def getKeys(fromEmail,toEmail,gpg,dbpassphrase):
     """
     Get the key for the fromEmail -> toEmail route
     return privkey, mypubkey, otherpubkey
     """
 
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
 
     with db:
 
@@ -111,12 +121,12 @@ def getKeys(fromEmail,toEmail):
             if row[0] == fromEmail and row[1] == toEmail:
                 return row[2], row[3], row[4]
 
-def listKeys():
+def listKeys(gpg,dbpassphrase):
     """
     List routes for all keys in database
     """
 
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
 
     with db:
 
@@ -127,12 +137,12 @@ def listKeys():
             print row[0]+' -> '+row[1]
         print 'You have %d total routes' % len(rows)
 
-def cloneKey(fromEmail,toEmail,newFromEmail,newToEmail):
+def cloneKey(fromEmail,toEmail,newFromEmail,newToEmail,gpg,dbpassphrase):
    """
    Clone key from route fromEmail -> toEmail to new route newFromEmail -> newToEmail
    """
 
-   db = sqlite3.connect(KEYS_DB)
+   db = openDB(KEYS_DB, gpg,dbpassphrase)
 
    with db:
 
@@ -145,13 +155,14 @@ def cloneKey(fromEmail,toEmail,newFromEmail,newToEmail):
                changed = True
                cur.execute('INSERT INTO keys VALUES(?,?,?,?,?,?)', (newFromEmail,newToEmail,row[2],row[3],row[4],row[5]))
        if not changed: print 'Matching key not found, nothing changed.'
+   closeDB(db, KEYS_DB, gpg,dbpassphrase)
 
-def changePubKey(fromEmail,toEmail,pubkey):
+def changePubKey(fromEmail,toEmail,pubkey,gpg,dbpassphrase):
     """
     Change the otherpubkey for the fromEmail -> toEmail route
     """
 
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
 
     with db:
 
@@ -164,13 +175,14 @@ def changePubKey(fromEmail,toEmail,pubkey):
                 changed = True
                 cur.execute('UPDATE keys SET OtherPublicKey = ? WHERE FromEmail = ? AND ToEmail = ?', (pubkey,row[0],row[1]))
         if not changed: print 'Matching key not found, nothing changed.'
+    closeDB(db, KEYS_DB, gpg,dbpassphrase)
 
-def changeToEmail(fromEmail,oldToEmail,newToEmail):
+def changeToEmail(fromEmail,oldToEmail,newToEmail,gpg,dbpassphrase):
     """
     Change the toEmail address on the fromEmail -> oldToEmail route
     """
 
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
 
     with db:
 
@@ -183,13 +195,14 @@ def changeToEmail(fromEmail,oldToEmail,newToEmail):
                 changed = True
                 cur.execute('UPDATE keys SET ToEmail = ? WHERE FromEmail = ? AND ToEmail = ?', (newToEmail,row[0],row[1]))
         if not changed: print 'Matching key not found, nothing changed.'
+    closeDB(db, KEYS_DB, gpg,dbpassphrase)
 
-def changeFromEmail(oldFromEmail,newFromEmail,toEmail):
+def changeFromEmail(oldFromEmail,newFromEmail,toEmail,gpg,dbpassphrase):
     """
     Change the fromEmail address on the oldFromEmail -> toEmail route
     """
 
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
 
     with db:
 
@@ -202,13 +215,14 @@ def changeFromEmail(oldFromEmail,newFromEmail,toEmail):
                 changed = True
                 cur.execute('UPDATE keys SET FromEmail = ? WHERE FromEmail = ? AND ToEmail = ?', (newFromEmail,row[0],row[1]))
         if not changed: print 'Matching key not found, nothing changed.'
+    closeDB(db, KEYS_DB, gpg,dbpassphrase)
 
-def deleteKey(fromEmail,toEmail):
+def deleteKey(fromEmail,toEmail,gpg,dbpassphrase):
     """
     Delete the fromEmail -> toEmail key from the database
     """
 
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
 
     with db:
 
@@ -218,15 +232,16 @@ def deleteKey(fromEmail,toEmail):
         for row in rows:
             if row[0] == fromEmail and row[1] == toEmail:
                 cur.execute('DELETE FROM keys WHERE FromEmail = ? AND ToEmail = ?', (fromEmail,toEmail))
+    closeDB(db, KEYS_DB, gpg,dbpassphrase)
 
-def genSharedSecret(fromEmail, toEmail):
+def genSharedSecret(fromEmail,toEmail,gpg,dbpassphrase):
     """
     Generate the shared secret for the fromEmail -> toEmail route
     """
 
     try:
         a = dh.DiffieHellman()
-        privkey, mypubkey, otherpubkey = getKeys(fromEmail,toEmail)
+        privkey, mypubkey, otherpubkey = getKeys(fromEmail,toEmail,gpg,dbpassphrase)
         a.privateKey = long(privkey)
         sharedSecret = a.genSecret(long(privkey),long(otherpubkey))
         s = hashlib.sha256()
@@ -235,7 +250,7 @@ def genSharedSecret(fromEmail, toEmail):
     except Exception:
         print 'Invalid public key: %s -> %s' % (fromEmail, toEmail)
 
-def mutateKey(fromEmail,toEmail):
+def mutateKey(fromEmail,toEmail,gpg,dbpassphrase):
     """
     Change the privkey, mypubkey pair on the fromEmail -> toEmail route
     without modifying the otherpubkey.  Also, create a mutatekey.asc file
@@ -246,7 +261,7 @@ def mutateKey(fromEmail,toEmail):
     the new key. (ephemeral DH - perfect forward secrecy)
     """
 
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
 
     with db:
 
@@ -262,15 +277,16 @@ def mutateKey(fromEmail,toEmail):
                 cur.execute('UPDATE keys SET SecretKey = ? WHERE FromEmail = ? AND ToEmail = ?', (privkey,fromEmail,toEmail))
                 cur.execute('UPDATE keys SET PublicKey = ? WHERE FromEmail = ? AND ToEmail = ?', (mypubkey,fromEmail,toEmail))
         if not changed: print 'Matching key not found, nothing changed.'
+    closeDB(db, KEYS_DB, gpg,dbpassphrase)
 
-def getNewsTimestamp():
+def getNewsTimestamp(gpg,dbpassphrase):
     """
     Get the old timestamp for reading messages from a.a.m, and replace
     the old timestamp with a new one for next time
     """
 
     curTimeStamp = time.time()
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
 
     with db:
 
@@ -281,14 +297,15 @@ def getNewsTimestamp():
             if row[0] == 1: timeStamp = int(row[1])-1
             cur.execute('UPDATE news SET LastReadTime = ? WHERE Id = 1', (curTimeStamp,))
         return timeStamp
+    closeDB(db, KEYS_DB, gpg,dbpassphrase)
 
-def getListOfKeys():
+def getListOfKeys(gpg,dbpassphrase):
     """
     Get the route and shared secret for all keys in the database.  This
     will be used to query a.a.m for any messages associated with our keys.
     """
 
-    db = sqlite3.connect(KEYS_DB)
+    db = openDB(KEYS_DB, gpg,dbpassphrase)
     listOfKeys = []
 
     with db:
@@ -296,10 +313,40 @@ def getListOfKeys():
         cur.execute("SELECT * FROM keys")
         rows = cur.fetchall()
         for row in rows:
-            sSecret = genSharedSecret(row[0],row[1])
+            sSecret = genSharedSecret(row[0],row[1],gpg,dbpassphrase)
             if sSecret:
                 listOfKeys.append((row[0],row[1],sSecret))
         return listOfKeys
+
+def openDB(keys_db,gpg,dbpassphrase):
+
+    db = sqlite3.connect(':memory:')
+
+    with open(keys_db, 'rb') as f:
+        sql = gpg.decrypt_file(f, passphrase=dbpassphrase)
+        if not sql:
+            print 'Bad passphrase!'
+            sys.exit(1)
+        db.cursor().executescript(str(sql))
+    return db
+
+def closeDB(db, keys_db,gpg,dbpassphrase):
+
+    passphrase1='1'
+    passphrase2='2'
+    while passphrase1 != passphrase2:
+        passphrase1 = getpass.getpass('Passphrase to ENCRYPT keys.db: ')
+        passphrase2 = getpass.getpass('Retype: ')
+        if passphrase1 != passphrase2:
+            print 'Passphrase did not match.'
+    sql = ''
+    for item in db.iterdump():
+        sql = sql+item+'\n'
+    crypt_sql = gpg.encrypt(sql, recipients=None, symmetric='AES256',
+                            always_trust=True, passphrase=passphrase1)
+
+    with open(keys_db, 'wb') as f:
+        f.write(str(crypt_sql))
 
 if __name__=="__main__":
     """

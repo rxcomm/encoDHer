@@ -1,3 +1,6 @@
+0.3 -
+ * keys.db is now encrypted with AES256 (passphrase supplied by user)
+
 0.2 - Oct. 8, 2013
  * encoDHer now decrypts unicode strings properly
  * Invalid public key exception during a.a.m search is now handled

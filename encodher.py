@@ -43,6 +43,12 @@ gpg = gnupg.GPG(gnupghome=HOME, gpgbinary=GPGBINARY, keyring=KEYRING,
 gpg.encoding = 'utf-8'
 
 try:
+    with open(KEYS_DB):
+        dbpassphrase = getpass.getpass('Passphrase to decrypt keys.db: ')
+except IOError:
+    pass
+
+try:
     opt = sys.argv[1]
 except (IndexError):
     print 'Options:'
@@ -66,7 +72,10 @@ except (IndexError):
 
 def init():
 
-    dhutils.initDB()
+    try:
+        dhutils.initDB(gpg,dbpassphrase)
+    except NameError:
+        dhutils.initDB(gpg,'')
 
 def rollback():
 
@@ -84,7 +93,7 @@ def rollback():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    dhutils.rollback(days)
+    dhutils.rollback(days,gpg,dbpassphrase)
 
 def importKey():
 
@@ -127,7 +136,7 @@ def importKey():
     print 'To Email is: %s' % toEmail.lower()
     fromEmail = raw_input('Enter From Email: ')
 
-    keys = dhutils.getKeys(fromEmail.lower(),toEmail.lower())
+    keys = dhutils.getKeys(fromEmail.lower(),toEmail.lower(),gpg,dbpassphrase)
 
     if not keys:
         print 'key doesn\'t exist for the '+fromEmail+' -> '+toEmail+' route'
@@ -135,13 +144,13 @@ def importKey():
         ans = raw_input('y/N: ')
         if ans == 'y':
             dhutils.makeKeys()
-            dhutils.insertKeys(fromEmail.lower(), toEmail.lower(), pubkey.lower())
+            dhutils.insertKeys(fromEmail.lower(),toEmail.lower(),pubkey.lower(),gpg,dbpassphrase)
     else:
         print 'key exists for the '+fromEmail.lower()+' -> '+toEmail.lower()+' route'
         print 'change key?'
         ans = raw_input('y/N: ')
         if ans == 'y':
-            dhutils.changePubKey(fromEmail.lower(),toEmail.lower(),pubkey.lower())
+            dhutils.changePubKey(fromEmail.lower(),toEmail.lower(),pubkey.lower(),gpg,dbpassphrase)
 
 
 def sign_pub():
@@ -162,7 +171,7 @@ def sign_pub():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail)
+    privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail,gpg,dbpassphrase)
     while len(mypubkey) < 37*50:
         mypubkey = '0'+mypubkey
     brokenkey = [mypubkey[i:i+50] for i in range(0, len(mypubkey), 50)]
@@ -201,7 +210,7 @@ def change_toEmail():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    keys = dhutils.changeToEmail(fromEmail,oldToEmail,newToEmail)
+    keys = dhutils.changeToEmail(fromEmail,oldToEmail,newToEmail,gpg,dbpassphrase)
 
 
 def change_fromEmail():
@@ -222,7 +231,7 @@ def change_fromEmail():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    keys = dhutils.changeFromEmail(oldFromEmail,newFromEmail,toEmail)
+    keys = dhutils.changeFromEmail(oldFromEmail,newFromEmail,toEmail,gpg,dbpassphrase)
 
 def change_pub():
     try:
@@ -242,7 +251,7 @@ def change_pub():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    keys = dhutils.changePubKey(fromEmail,toEmail,pubkey)
+    keys = dhutils.changePubKey(fromEmail,toEmail,pubkey,gpg,dbpassphrase)
 
 def hs():
     try:
@@ -267,7 +276,7 @@ def hs():
     else:
         sendAnon = False
 
-    passphrase = dhutils.genSharedSecret(fromEmail, toEmail)
+    passphrase = dhutils.genSharedSecret(fromEmail,toEmail,gpg,dbpassphrase)
 
     with open(file_name, "rb") as f:
         msg = gpg.encrypt_file(f, recipients=None, symmetric='AES256',
@@ -316,7 +325,7 @@ def hsd():
 
     base, ext = os.path.splitext(file_name)
     with open(file_name, "r") as f:
-        passphrase = dhutils.genSharedSecret(toEmail, fromEmail)
+        passphrase = dhutils.genSharedSecret(toEmail,fromEmail,gpg,dbpassphrase)
         msg = gpg.decrypt_file(f, passphrase=passphrase, always_trust=True)
         if not msg:
             print 'Bad shared secret!'
@@ -333,7 +342,7 @@ def list_keys():
         sys.exit(1)
 
     print 'Listing of all routes in database:'
-    dhutils.listKeys()
+    dhutils.listKeys(gpg,dbpassphrase)
 
 def secret():
     try:
@@ -351,7 +360,7 @@ def secret():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    sharedSecret = dhutils.genSharedSecret(fromEmail,toEmail)
+    sharedSecret = dhutils.genSharedSecret(fromEmail,toEmail,gpg,dbpassphrase)
     print 'Secret: ',sharedSecret
 
 def gen():
@@ -371,7 +380,7 @@ def gen():
         sys.exit(1)
 
     dhutils.makeKeys()
-    dhutils.insertKeys(fromEmail,toEmail,1)
+    dhutils.insertKeys(fromEmail,toEmail,1,gpg,dbpassphrase)
 
 
 def get():
@@ -390,7 +399,7 @@ def get():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail)
+    privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail,gpg,dbpassphrase)
     print fromEmail+' Public Key: ', mypubkey
     print toEmail+' Public Key: ', otherpubkey
 
@@ -410,7 +419,7 @@ def delete():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    dhutils.deleteKey(fromEmail,toEmail)
+    dhutils.deleteKey(fromEmail,toEmail,gpg,dbpassphrase)
 
 def mutate():
     try:
@@ -428,10 +437,10 @@ def mutate():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    oldpassphrase = dhutils.genSharedSecret(fromEmail,toEmail)
-    dhutils.mutateKey(fromEmail,toEmail)
+    oldpassphrase = dhutils.genSharedSecret(fromEmail,toEmail,gpg,dbpassphrase)
+    dhutils.mutateKey(fromEmail,toEmail,gpg,dbpassphrase)
 
-    privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail)
+    privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail,gpg,dbpassphrase)
     while len(mypubkey) < 37*50:
         mypubkey = '0'+mypubkey
     brokenkey = [mypubkey[i:i+50] for i in range(0, len(mypubkey), 50)]
@@ -472,11 +481,11 @@ def mutate():
 def aam():
     GROUP  = "alt.anonymous.messages"
 
-    timeStamp = dhutils.getNewsTimestamp()
+    timeStamp = dhutils.getNewsTimestamp(gpg,dbpassphrase)
     YYMMDD = time.strftime('%y%m%d', time.gmtime(timeStamp))
     HHMMSS = time.strftime('%H%M%S', time.gmtime(timeStamp))
 
-    passphrases = dhutils.getListOfKeys()
+    passphrases = dhutils.getListOfKeys(gpg,dbpassphrase)
 
     # connect to server
     server = nntplib.NNTP(NEWSSERVER,NEWSPORT)
@@ -533,7 +542,7 @@ def clone():
         print 'initialize the database with '+sys.argv[0]+' --init'
         sys.exit(1)
 
-    dhutils.cloneKey(fromEmail,toEmail,newFromEmail,newToEmail)
+    dhutils.cloneKey(fromEmail,toEmail,newFromEmail,newToEmail,gpg,dbpassphrase)
 
 def errhandler():
     print 'Invalid option, try again!'
