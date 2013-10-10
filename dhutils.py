@@ -48,7 +48,6 @@ def initDB(gpg,dbpassphrase):
     """
 
     timeStamp = time.time()
-    print timeStamp
 
     try:
         with open(KEYS_DB): pass

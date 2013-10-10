@@ -75,8 +75,11 @@ def init():
 
     try:
         dhutils.initDB(gpg,dbpassphrase)
+        print 'Database already exists.  Only the news timestamp was updated.'
     except NameError:
-        dhutils.initDB(gpg,'')
+        dhutils.initDB(gpg,'password')
+        print 'New keys.db database created, password is: password'
+        print 'Change it immediately using: '+sys.argv[0]+' --change-dbkey'
 
 def rollback():
 
