@@ -26,9 +26,7 @@ import sqlite3
 import sys
 import os
 import time
-import sys
 import hashlib
-import gnupg
 import getpass
 from binascii import hexlify
 from constants import *

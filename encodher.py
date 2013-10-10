@@ -132,7 +132,10 @@ def importKey():
     while pubkey[:1] == '0':
         pubkey = pubkey[1:]
 
-    toEmail = verified.username.split('<')[1].split('>')[0]
+    try:
+        toEmail = verified.username.split('<')[1].split('>')[0] # regular email
+    except IndexError:
+        toEmail = verified.username # only a name - probably anonymous
     print 'To Email is: %s' % toEmail.lower()
     fromEmail = raw_input('Enter From Email: ')
 
