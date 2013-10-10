@@ -150,6 +150,7 @@ can be obtained by executing encodher without any arguments.
      --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup
      --clone-key, -y: clone key from one route to another
      --rollback, -b: roll back the a.a.m last read timestamp
+     --change-dbkey, -k: change keys.db encryption key
 
 ### Perfect forward secrecy
 

@@ -316,6 +316,17 @@ def getListOfKeys(gpg,dbpassphrase):
                 listOfKeys.append((row[0],row[1],sSecret))
         return listOfKeys
 
+def changeDBKey(keys_db,gpg,dbpassphrase):
+    db = openDB(keys_db,gpg,dbpassphrase)
+    passphrase1='1'
+    passphrase2='2'
+    while passphrase1 != passphrase2:
+        passphrase1 = getpass.getpass('New passphrase for keys.db database: ')
+        passphrase2 = getpass.getpass('Retype: ')
+        if passphrase1 != passphrase2:
+            print 'Passphrase did not match.'
+    closeDB(db,keys_db,gpg,passphrase1)
+
 def openDB(keys_db,gpg,dbpassphrase):
 
     db = sqlite3.connect(':memory:')
@@ -328,20 +339,13 @@ def openDB(keys_db,gpg,dbpassphrase):
         db.cursor().executescript(str(sql))
     return db
 
-def closeDB(db, keys_db,gpg,dbpassphrase):
+def closeDB(db,keys_db,gpg,dbpassphrase):
 
-    passphrase1='1'
-    passphrase2='2'
-    while passphrase1 != passphrase2:
-        passphrase1 = getpass.getpass('Passphrase to ENCRYPT keys.db: ')
-        passphrase2 = getpass.getpass('Retype: ')
-        if passphrase1 != passphrase2:
-            print 'Passphrase did not match.'
     sql = ''
     for item in db.iterdump():
         sql = sql+item+'\n'
     crypt_sql = gpg.encrypt(sql, recipients=None, symmetric='AES256',
-                            always_trust=True, passphrase=passphrase1)
+                            always_trust=True, passphrase=dbpassphrase)
 
     with open(keys_db, 'wb') as f:
         f.write(str(crypt_sql))

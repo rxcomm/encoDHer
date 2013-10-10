@@ -43,12 +43,6 @@ gpg = gnupg.GPG(gnupghome=HOME, gpgbinary=GPGBINARY, keyring=KEYRING,
 gpg.encoding = 'utf-8'
 
 try:
-    with open(KEYS_DB):
-        dbpassphrase = getpass.getpass('Passphrase to decrypt keys.db: ')
-except IOError:
-    pass
-
-try:
     opt = sys.argv[1]
 except (IndexError):
     print 'Options:'
@@ -68,7 +62,14 @@ except (IndexError):
     print ' --fetch-aam, -h: fetch messages from alt.anonymous.messages newsgroup'
     print ' --clone-key, -y: clone key from one route to another'
     print ' --rollback, -b: roll back the a.a.m last read timestamp'
+    print ' --change-dbkey, -k: change keys.db encryption key'
     sys.exit(0)
+
+try:
+    with open(KEYS_DB):
+        dbpassphrase = getpass.getpass('Passphrase to decrypt keys.db: ')
+except IOError:
+    pass
 
 def init():
 
@@ -547,6 +548,11 @@ def clone():
 
     dhutils.cloneKey(fromEmail,toEmail,newFromEmail,newToEmail,gpg,dbpassphrase)
 
+def changeDBKey():
+
+    dhutils.changeDBKey(KEYS_DB,gpg,dbpassphrase)
+    print 'Key changed'
+
 def errhandler():
     print 'Invalid option, try again!'
     print 'Execute '+sys.argv[0]+' to get a list of options.'
@@ -585,11 +591,13 @@ options = { '--init'   : init,
   '--clone-key' : clone,
   '-y' : clone,
   '--rollback' : rollback,
-  '-b' : rollback
+  '-b' : rollback,
+  '--change-dbkey' : changeDBKey,
+  '-k' : changeDBKey
 }
 
 def main():
     options.get(sys.argv[1],errhandler)()
 
 if __name__ == '__main__':
-      main()
+    main()
