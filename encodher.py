@@ -519,7 +519,7 @@ def aam():
                         #if match, decrypt
                         if match:
                             print '\nMail for: '+passphrase[0]+' from '+passphrase[1]
-                            msg = gpg.decrypt(message.fp.read(), passphrase=passphrase[2],
+                            msg = gpg.decrypt(message.as_string(), passphrase=passphrase[2],
                                               always_trust=True)
                             if not msg:
                                 print 'Bad shared secret!'
