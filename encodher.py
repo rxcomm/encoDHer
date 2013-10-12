@@ -33,7 +33,7 @@ import time
 import string
 import random
 import StringIO
-import rfc822
+import email
 import nntplib
 from constants import *
 
@@ -508,27 +508,23 @@ def aam():
             except (nntplib.error_temp, nntplib.error_perm):
                 pass # no such message (maybe it was deleted?)
             text = string.join(text, "\n")
-            file = StringIO.StringIO(text)
 
-            message = rfc822.Message(file)
+            message = email.message_from_string(text)
             match = False
 
             for passphrase in passphrases:
-                message.rewindbody()
                 for label, item in message.items():
-                    if label == 'subject':
+                    if label == 'Subject':
                         match = hsub.check(passphrase[2][:16],item)
-
-                #if match: print message.fp.read()
-                if match:
-
-                    print '\nMail for: '+passphrase[0]+' from '+passphrase[1]
-                    msg = gpg.decrypt(message.fp.read(), passphrase=passphrase[2],
-                          always_trust=True)
-                    if not msg:
-                        print 'Bad shared secret!'
-                        sys.exit(1)
-                    print '\n'+unicode(msg)
+                        #if match, decrypt
+                        if match:
+                            print '\nMail for: '+passphrase[0]+' from '+passphrase[1]
+                            msg = gpg.decrypt(message.fp.read(), passphrase=passphrase[2],
+                                              always_trust=True)
+                            if not msg:
+                                print 'Bad shared secret!'
+                                sys.exit(1)
+                            print '\n'+unicode(msg)
     print 'End of messages.'
 
 def clone():

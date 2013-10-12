@@ -94,10 +94,10 @@ subject to alt.anonymous.messages via mixmaster and tor.
 For PFS, Bob then securely destroys his first DH key pair.
 
 Alice then searches alt.anonymous.messages via tor with
-the DH shared secret generated from her second DH private
-key and Bob's first DH public key.  When she finds
+part of the DH shared secret generated from her second DH private
+key and Bob's first DH public key as the hsub passphrase.  When she finds
 the message, she decrypts it, reads the plaintext
-and gets Bob's new DH public key. If she desires
+and (if he sent one for PFS) gets Bob's new DH public key. If she desires
 to respond, she generates a new plaintext (and if PFS is
 desired, a new DH keypair) and the cycle continues.
 
