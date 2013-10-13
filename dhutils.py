@@ -27,7 +27,7 @@ import sys
 import os
 import time
 import hashlib
-import getpass
+from getpass import getpass
 from binascii import hexlify
 from constants import *
 
@@ -70,8 +70,15 @@ def rollback(days,gpg,dbpassphrase):
     The timestamp marks the beginning of time to search a.a.m
     """
 
-    timeStamp = time.time() - int(days)*86400
-    print timeStamp
+    try:
+        timeStamp = time.time() - float(days)*86400.
+    except ValueError:
+        print 'Number of days to roll back must be a (real) number.'
+        sys.exit(1)
+    YYYYMMDD = time.strftime('%Y-%m-%d', time.gmtime(timeStamp))
+    HHMMSS = time.strftime('%H:%M:%S', time.gmtime(timeStamp))
+
+    print 'a.a.m last read time rolled back to '+YYYYMMDD+' at '+HHMMSS+' GMT'
     db = openDB(KEYS_DB,gpg,dbpassphrase)
 
     with db:
@@ -320,8 +327,8 @@ def changeDBKey(keys_db,gpg,dbpassphrase):
     passphrase1='1'
     passphrase2='2'
     while passphrase1 != passphrase2:
-        passphrase1 = getpass.getpass('New passphrase for keys.db database: ')
-        passphrase2 = getpass.getpass('Retype: ')
+        passphrase1 = getpass('New passphrase for keys.db database: ')
+        passphrase2 = getpass('Retype: ')
         if passphrase1 != passphrase2:
             print 'Passphrase did not match.'
     closeDB(db,keys_db,gpg,passphrase1)

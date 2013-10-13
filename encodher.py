@@ -26,7 +26,6 @@ import os
 import sys
 import hsub
 import gnupg
-import getpass
 import dhutils
 import re
 import time
@@ -35,6 +34,7 @@ import random
 import StringIO
 import email
 import nntplib
+from getpass import getpass
 from constants import *
 
 gpg = gnupg.GPG(gnupghome=HOME, gpgbinary=GPGBINARY, keyring=KEYRING,
@@ -67,7 +67,7 @@ except (IndexError):
 
 try:
     with open(KEYS_DB):
-        dbpassphrase = getpass.getpass('Passphrase to decrypt keys.db: ')
+        dbpassphrase = getpass('Passphrase to decrypt keys.db: ')
 except IOError:
     pass
 
@@ -186,7 +186,7 @@ def sign_pub():
     for line in brokenkey:
         new_mypubkey += line+'\n'
 
-    passphrase = getpass.getpass('Signing key ('+fromEmail+') password: ')
+    passphrase = getpass('Signing key ('+fromEmail+') password: ')
     signed_data = gpg.sign('DH Public Key:\n'+new_mypubkey+'\n', passphrase=passphrase,
                            keyid=fromEmail)
     print ''
@@ -455,7 +455,7 @@ def mutate():
     for line in brokenkey:
         new_mypubkey += line+'\n'
 
-    passphrase = getpass.getpass('Signing key ('+fromEmail+') password: ')
+    passphrase = getpass('Signing key ('+fromEmail+') password: ')
     signed_data = gpg.sign('DH Public Key:\n'+new_mypubkey+'\n', passphrase=passphrase,
                             keyid=fromEmail)
     print ''
