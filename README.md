@@ -9,6 +9,10 @@ secret between the sender and recipient of an email message.
 
 Keys are stored in the database file keys.db.
 
+encoDHer implements perfect forward secrecy (PFS) in email communications.
+It is essentially ephemeral Diffie-Hellman for email, where dynamic key changes
+are provided by the ```--mutate-key``` option in encoDHer.
+
 ### Installation requirements
 
 The encodher package requires python-gnupg-0.3.5 or greater to function.
@@ -37,7 +41,8 @@ Install the encoDHer module using the command:
 
 from the encoDHer directory. An executable named encodher will be created
 and copied to /usr/local/bin/encodher.  The setup.py command should also
-automatically install python-gnupg with most linux variants.
+automatically install python-gnupg with most linux variants if you have ```setuptools```
+installed (for example, ```sudo apt-get install python-setuptools``` in ubuntu).
 
 ### Startup
 
@@ -46,7 +51,7 @@ accomplished with the following command:
 
     encodher --init
 
-Once your database is created, you can generate keys for specific recipients
+Once your database is created, you can generate keys for specific email routes
 using the command:
 
     encodher --gen-key sender@example.org receiver@otherexample.org
@@ -54,7 +59,7 @@ using the command:
 where your email address is sender@example.org and your intended recipient's
 email address is receiver@otherexample.org. Note that using the DH shared
 secret protocol requires generating a DH secret key for each sender -> receiver
-pair.  So you will probably end up with several keys in the database.
+route.  So you will probably end up with several keys in the database.
 
 ### Key distribution
 
@@ -62,7 +67,7 @@ You can then export your signed DH public key with the command:
 
     encodher --sign-pub sender@example.org receiver@otherexample.org
 
-The output will be a signed version of your public key.  You can then
+The output will be a GPG signed version of your DH public key.  You can then
 send that public key to a recipient over a non-secret channel.  An
 anonymized key tablet will be developed later to facilitate DH public key
 exchanges for the encodher utility, but any nonsecure channel will work.
@@ -89,7 +94,7 @@ key using the command:
 
     encodher --encode-email file sender@example.org receiver@otherexample.org
 
-The email will be encrypted using symmetric aes256 encryption and output
+The email will be encrypted using symmetric AES256 encryption and output
 to file.asc.  The file is an ascii-armored pgp-format file.
 
 Upon receipt of the encrypted message, the receiver can then decrypt the
@@ -100,13 +105,13 @@ file using the command:
 The plaintext message will then be displayed.  It is probably good to note
 here that the first email address is always the message sender, and the second
 is always the receiver.  So for example, if I received a message at
-alice@alice.com from my buddy bob@bob.com, the correct command to decrypt the
+alice@alice.com from my buddy bob@bob.com, the correct syntax to decrypt the
 message would be:
 
     encodher --decode-email file.asc bob@bob.com alice@alice.com
 
-because bob was the sender of the email and alice was the receiver.  When I
-encrypt an email to bob, the correct command is:
+because bob was the sender of the email and alice was the receiver.  When alice
+encrypts an email to bob, the correct syntax is:
 
     encodher --encode-email file alice@alice.com bob@bob.com
 
