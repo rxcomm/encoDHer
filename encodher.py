@@ -337,7 +337,7 @@ def hsd():
         if not msg:
             print 'Bad shared secret!'
             sys.exit(1)
-        print '\n'+str(msg)
+        print '\n'+unicode(msg)
 
 
 def list_keys():
