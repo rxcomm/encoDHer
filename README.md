@@ -1,5 +1,7 @@
-encoDHer
+[encoDHer] [1] - ephemeral Diffie-Hellman for email communications
 ===
+
+  [1]: https://github.com/rxcomm/encoDHer/  "encoDHer"
 
 ### Introduction
 
@@ -170,9 +172,9 @@ change their keys to take advantage of PFS by executing:
 This will destroy sender@example.org's old DH secret key, generate a new
 DH secret key and export the corresponding new DH public key encrypted with the
 old DH shared secret.  This encrypted file can be emailed to the receiver,
-who can then decrypt the file and import the key using the --import option.
+who can then decrypt the file and import the key using the ```--import``` option.
 If an unencrypted version of the new signed DH public key is desired,
-the --sign-pub option can be used. Once the new DH public key has been
+the ```--sign-pub``` option can be used. Once the new DH public key has been
 imported by the receiver, no one (including the original sender and receiver)
 will be able to read the old messages. Change keys carefully.
 
