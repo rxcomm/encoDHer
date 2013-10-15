@@ -526,7 +526,7 @@ def aam():
                             print '\n'+unicode(msg)
                             with open('message_'+message_id[1:6]+'.txt', "w") as f:
                                 f.write(message.as_string()+'\n')
-                                print 'encrypted message stored in message_<id>.txt'
+                                print 'encrypted message stored in message_'+message_id[1:6]+'.txt'
 
     print 'End of messages.'
 

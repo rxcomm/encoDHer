@@ -1,6 +1,8 @@
 0.3 -
  * keys.db is now encrypted with AES256 (passphrase supplied by user)
  * moved aam parser from rfc822 module to email module
+ * --fetch-aam option now writes each encrypted message to a separate file
+ * README.md and ANONYMOUS.md received significant updates
 
 0.2 - Oct. 8, 2013
  * encoDHer now decrypts unicode strings properly
