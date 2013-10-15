@@ -15,6 +15,50 @@ encoDHer implements perfect forward secrecy (PFS) in email communications.
 It is essentially ephemeral Diffie-Hellman for email, where dynamic key changes
 are provided by the ```--mutate-key``` option in encoDHer.
 
+### Why symmetric encryption? Isn't using public key encryption good enough if we use ```--throw-keyids``` as an option with GPG?
+
+The biggest argument in favor of
+symmetric encryption has to do with the difficulty required to generate new keys.  It is
+much easier to generate a new set of DH keys than it is to generate a new pair of RSA keys,
+for example.
+So, when we want to rotate keys to preserve perfect forward secrecy, the key-generation
+process is very quick.
+
+An important second argument
+in favor of using the DH key exchange protocol is that for
+a given key length, DH protocols are stronger than public key protocols. The additional
+strength comes from the fact that the best known algorithm for cracking either is the
+[General Number Field Sieve] [2].  The matrix algebra part of this algorithm involves
+a large matrix with bits as entries for public key protocols, and with large integers as
+entries for DH protocols. In essence, this makes the DH protocols stronger by a factor
+of the length of the integers in the matrix (the length of the large prime used in DH).
+More detail on the above can be found
+[here] [3].
+
+  [2]: https://en.wikipedia.org/wiki/General_number_field_sieve "General Number Field Sieve"
+  [3]: http://security.stackexchange.com/questions/35471/is-there-any-particular-reason-to-use-diffie-hellman-over-rsa-for-key-exchange" "here"
+
+One further advantage of DH protocols is that both sender and receiver are automatically
+authenticated.
+It takes the sender's DH secret key and receiver's DH public key to encrypt a message
+and the sender's DH public key and receiver's DH private key to decrypt the message.
+In contrast, public key protocols only authenticate the receiver - anyone can encrypt
+a message using the receiver's public key. While it is true that the sender can sign the
+message to authenticate it, this requires a separate operation and is not a part of
+the basic public key encryption protocol.
+
+There are some additional minor advantages that arise due to the nature of the standards
+specifying these two encryption methodologies - DH is free and the public-key algorithms
+have historically been protected by patents.
+
+The primary disadvantage of using DH for generating shared secrets is, of course,
+that you need a separate DH secret key for each email route that you want to use.
+EncoDHer provides a simple way to manage all of these keys.
+
+EncoDHer also provides a mechanism for anonymous communication between parties.
+In this case, communication takes place via the public usenet newsgroup mailbox
+alt.anonymous.messages rather than by standard email.
+
 ### Installation requirements
 
 The encodher package requires python-gnupg-0.3.5 or greater to function.

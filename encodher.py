@@ -31,7 +31,6 @@ import re
 import time
 import string
 import random
-import StringIO
 import email
 import nntplib
 from getpass import getpass
