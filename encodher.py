@@ -504,7 +504,7 @@ def aam():
 
         for msg_id in ids:
             try:
-                resp, id, message_id, text = server.article(msg_id)
+                resp, number, message_id, text = server.article(msg_id)
             except (nntplib.error_temp, nntplib.error_perm):
                 pass # no such message (maybe it was deleted?)
             text = string.join(text, "\n")
@@ -525,6 +525,10 @@ def aam():
                                 print 'Bad shared secret!'
                                 sys.exit(1)
                             print '\n'+unicode(msg)
+                            with open('message_'+message_id[1:6]+'.txt', "w") as f:
+                                f.write(message.as_string()+'\n')
+                                print 'encrypted message stored in message_<id>.txt'
+
     print 'End of messages.'
 
 def clone():
