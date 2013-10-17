@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information, see https://github.com/rxcomm/encoDHer
 """
-
+print 'encoDHer version 0.3'
 
 import os
 import sys
@@ -149,7 +149,6 @@ def importKey():
         print 'create new key?'
         ans = raw_input('y/N: ')
         if ans == 'y':
-            dhutils.makeKeys()
             dhutils.insertKeys(fromEmail.lower(),toEmail.lower(),pubkey.lower(),gpg,dbpassphrase)
     else:
         print 'key exists for the '+fromEmail.lower()+' -> '+toEmail.lower()+' route'
@@ -178,7 +177,7 @@ def sign_pub():
         sys.exit(1)
 
     privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail,gpg,dbpassphrase)
-    while len(mypubkey) < 37*50:
+    while len(mypubkey) < 50*50:
         mypubkey = '0'+mypubkey
     brokenkey = [mypubkey[i:i+50] for i in range(0, len(mypubkey), 50)]
     new_mypubkey = ''
@@ -447,7 +446,7 @@ def mutate():
     dhutils.mutateKey(fromEmail,toEmail,gpg,dbpassphrase)
 
     privkey, mypubkey, otherpubkey = dhutils.getKeys(fromEmail,toEmail,gpg,dbpassphrase)
-    while len(mypubkey) < 37*50:
+    while len(mypubkey) < 50*50:
         mypubkey = '0'+mypubkey
     brokenkey = [mypubkey[i:i+50] for i in range(0, len(mypubkey), 50)]
     new_mypubkey = ''

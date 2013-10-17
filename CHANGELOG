@@ -1,8 +1,21 @@
-0.3 -
+0.3 - Oct. 16, 2013
  * keys.db is now encrypted with AES256 (passphrase supplied by user)
  * moved aam parser from rfc822 module to email module
  * --fetch-aam option now writes each encrypted message to a separate file
  * README.md and ANONYMOUS.md received significant updates
+ * Updated encoDHer to use OpenSSL for key generation if M2Crypto is
+   available. M2Crypto is a python wrapper library for OpenSSL. If M2Crypto
+   is not available, encoDHer will use the old module from Mark Loiseau
+   (renamed dh_pydhe and updated to use the same prime as in the distributed
+   dhparams.pem file). A dhparams.pem file is now distributed with encoDHer
+   that contains an 8192 bit prime using a generator of 5. Such a big prime
+   is overkill for generating an AES256 encryption key, but what the heck...
+   Unfortunately, old keys.db databases are not compatible with this upgrade
+   and will need to be regenerated.
+ * If the dhparams.pem file is absent, encoDHer will use the Loiseau module
+   (renamed dh_legacy) with the original 6144-bit RFC3526 prime.  This is
+   backwards-compatible with old keys.db databases, but will NOT be
+   compatible with databases using the dh_m2crypto or dh_pydhe modules.
 
 0.2 - Oct. 8, 2013
  * encoDHer now decrypts unicode strings properly

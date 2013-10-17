@@ -66,13 +66,15 @@ The latest version is documented at:
 
 http://pythonhosted.org/python-gnupg/
 
-Additionally, the package makes use of the Diffie Hellman class
-from Mark Loiseau:
+Since version 0.3, encoDHer uses OpenSSL (through the M2Crypto library)
+for key generation and Diffie Hellman parameter management.
+Details regarding the use of OpenSSL are explained further
+below in this README. We note the following for those desiring legacy operation:
 
-http://blog.markloiseau.com/2013/01/diffie-hellman-tutorial-in-python/
+* Legacy (pre-version 0.3) operation of encoDHer made use of the DiffieHellman() class from [Mark Loiseau] [4]. This Diffie Hellman class is still included in the distribution and
+can be used by removing the dhparams.pem file.
 
-Note that this Diffie Hellman class is included in the distribution
-as dh.py.
+ [4]: http://blog.markloiseau.com/2013/01/diffie-hellman-tutorial-in-python/ "Mark Loiseau"
 
 Finally, this package requires the use of gnupg to sign DH public keys for
 export and to identify DH public keys for import. You will need the
@@ -270,3 +272,51 @@ from the executable, rename it as a .zip archive and unzip it, e.g.:
 
     mv encodher encodher.zip
     unzip encodher.zip
+
+### encoDHer with OpenSSL
+
+Since version 0.3, encoDHer has used OpenSSL for key generation. 
+The Diffie-Hellman parameters are imported from an OpenSSL dhparams.pem file.
+encoDHer interacts with OpenSSL through the M2Crypto library.
+In most linux systems, the M2Crypto library can be installed through the
+command:
+
+```
+sudo apt-get install python-m2crypto
+```
+
+or similar, depending on your particular flavor of linux.
+If M2Crypto is not present, encoDHer will use a version of the
+DiffieHellman() class that contains the same prime, generator, and keysize
+that is distributed in dhparams.pem. If the dhparams.pem file is not present, encoDHer will
+gracefully roll back to the pre-version 0.3 DiffieHellman() class from Mark Loiseau.
+
+The dhparams.pem file that is distributed with encoDHer uses an 8192 bit
+prime and a generator of 5.  This file is NOT secret, and may be re-used.
+
+*For* *the* *truly* *paranoid* - if you don't trust the dhparams.pem file provided by
+me and want to replace it with your own, the command to generate
+a new set of DH parameters with an 8192 bit prime is:
+
+```
+openssl dhparam -[2,5] -out dhparams.pem 8192
+```
+
+Using 2 in the command will force a generator of 2, and 5 will force a
+generator of 5. Keep in mind that everyone you communicate with needs to use
+the same set of DH parameters, so you will need to distribute those somehow.
+Smaller prime sizes (4096, 2048, 1024) will also work, although you will see
+a lot of zeros in your exported DH public keys.
+
+To find the prime in your new dhparams.pem file, execute the command:
+
+```
+./dh_m2crypto.py
+```
+
+This will run a key-matching test, and both the prime and generator are output
+as a part of this test.  If you do change dhparams.pem, you should also edit
+the prime and generator definitions in dh\_pydhe.py to reflect your new prime and
+generator. The prime should be copied directly (incluing the 0x hex prefix).
+If you change the prime size, you should also change the DH private key size in
+the \_\_init\_\_() method of dh\_pydhe.py to match your new prime.

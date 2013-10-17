@@ -20,8 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information, see https://github.com/rxcomm/encoDHer
 """
-
-import dh
 import sqlite3
 import sys
 import os
@@ -30,13 +28,25 @@ import hashlib
 from getpass import getpass
 from binascii import hexlify
 from constants import *
+try:
+    with open('/usr/local/lib/dhparams.pem'):
+        try:
+            from dh_m2crypto import *
+            print 'Using M2Crypto/OpenSSL'
+        except:
+            from dh_pydhe import *
+            print 'Using pyDHE'
+except IOError:
+    print 'No dhparams.pem file found - using 6144-bit RFC 3526 prime'
+    print 'with generator 2'
+    from dh_legacy import *
 
 def makeKeys():
     """
     Create a DH keyset
     """
 
-    a = dh.DiffieHellman()
+    a = DiffieHellman()
     privkey = a.privateKey
     pubkey = a.publicKey
     return str(privkey), str(pubkey)
@@ -93,7 +103,6 @@ def insertKeys(fromEmail,toEmail,otherpubkey,gpg,dbpassphrase):
     """
 
     db = openDB(KEYS_DB, gpg,dbpassphrase)
-    otherpubkey = str(otherpubkey)
 
     with db:
 
@@ -244,13 +253,10 @@ def genSharedSecret(fromEmail,toEmail,gpg,dbpassphrase):
     """
 
     try:
-        a = dh.DiffieHellman()
+        a = DiffieHellman()
         privkey, mypubkey, otherpubkey = getKeys(fromEmail,toEmail,gpg,dbpassphrase)
-        a.privateKey = long(privkey)
-        sharedSecret = a.genSecret(long(privkey),long(otherpubkey))
-        s = hashlib.sha256()
-        s.update(str(sharedSecret))
-        return hexlify(s.digest())
+        a.genKey(long(privkey),long(otherpubkey))
+        return hexlify(a.key)
     except Exception:
         print 'Invalid public key: %s -> %s' % (fromEmail, toEmail)
 
