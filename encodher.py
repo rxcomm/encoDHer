@@ -486,7 +486,7 @@ def mutate():
 def aam():
     GROUP  = "alt.anonymous.messages"
 
-    timeStamp = dhutils.getNewsTimestamp(gpg,dbpassphrase)
+    timeStamp, curTimeStamp = dhutils.getNewsTimestamp(gpg,dbpassphrase)
     YYMMDD = time.strftime('%y%m%d', time.gmtime(timeStamp))
     HHMMSS = time.strftime('%H%M%S', time.gmtime(timeStamp))
 
@@ -524,9 +524,11 @@ def aam():
                                 sys.exit(1)
                             print '\n'+unicode(msg)
                             with open('message_'+message_id[1:6]+'.txt', "w") as f:
+                                f.write('X-encoDHer-Route: <'+passphrase[1]+'-'+passphrase[0]+'>\n')
                                 f.write(message.as_string()+'\n')
                                 print 'encrypted message stored in message_'+message_id[1:6]+'.txt'
 
+    dhutils.setNewsTimestamp(curTimeStamp,gpg,dbpassphrase)
     print 'End of messages.'
 
 def clone():

@@ -287,27 +287,39 @@ def mutateKey(fromEmail,toEmail,gpg,dbpassphrase):
                 cur.execute('UPDATE keys SET SecretKey = ? WHERE FromEmail = ? AND ToEmail = ?', (privkey,fromEmail,toEmail))
                 cur.execute('UPDATE keys SET PublicKey = ? WHERE FromEmail = ? AND ToEmail = ?', (mypubkey,fromEmail,toEmail))
         if not changed: print 'Matching key not found, nothing changed.'
-    closeDB(db, KEYS_DB, gpg,dbpassphrase)
+    closeDB(db,KEYS_DB,gpg,dbpassphrase)
 
 def getNewsTimestamp(gpg,dbpassphrase):
     """
-    Get the old timestamp for reading messages from a.a.m, and replace
-    the old timestamp with a new one for next time
+    Get the old timestamp for reading messages from a.a.m.
+    Also, get the current time.
     """
-
-    curTimeStamp = time.time()
-    db = openDB(KEYS_DB, gpg,dbpassphrase)
-
+    curTime = time.time()
+    db = openDB(KEYS_DB,gpg,dbpassphrase)
+    
     with db:
-
         cur = db.cursor()
         cur.execute("SELECT * FROM news")
         rows = cur.fetchall()
         for row in rows:
             if row[0] == 1: timeStamp = int(row[1])-1
-            cur.execute('UPDATE news SET LastReadTime = ? WHERE Id = 1', (curTimeStamp,))
-        return timeStamp
-    closeDB(db, KEYS_DB, gpg,dbpassphrase)
+        closeDB(db,KEYS_DB,gpg,dbpassphrase)
+        return timeStamp, curTime
+
+def setNewsTimestamp(curTimeStamp,gpg,dbpassphrase):
+    """
+    Replace the old news timestamp with a new one for next time
+    """
+    db = openDB(KEYS_DB,gpg,dbpassphrase)
+
+    with db:
+        cur = db.cursor()
+        cur.execute("SELECT * FROM news")
+        rows = cur.fetchall()
+        for row in rows:
+            if row[0] == 1:
+                cur.execute('UPDATE news SET LastReadTime = ? WHERE Id = 1', (curTimeStamp,))
+        closeDB(db,KEYS_DB,gpg,dbpassphrase)
 
 def getListOfKeys(gpg,dbpassphrase):
     """
