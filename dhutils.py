@@ -368,7 +368,7 @@ def closeDB(db,keys_db,gpg,dbpassphrase):
     sql = ''
     for item in db.iterdump():
         sql = sql+item+'\n'
-    crypt_sql = gpg.encrypt(sql, recipients=None, symmetric='AES256',
+    crypt_sql = gpg.encrypt(sql, recipients=None, symmetric=CIPHER,
                             always_trust=True, passphrase=dbpassphrase)
 
     with open(keys_db, 'wb') as f:
