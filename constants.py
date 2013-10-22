@@ -29,3 +29,7 @@ NEWSPORT = 119
 
 # location of keys database
 KEYS_DB = config_path+'/keys.db'
+
+# symmetric cipher to be used - any cipher from gpg --version can go here
+CIPHER = 'AES256'
+#CIPHER = 'CAMELLIA256'

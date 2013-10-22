@@ -284,7 +284,7 @@ def hs():
     passphrase = dhutils.genSharedSecret(fromEmail,toEmail,gpg,dbpassphrase)
 
     with open(file_name, "rb") as f:
-        msg = gpg.encrypt_file(f, recipients=None, symmetric='AES256',
+        msg = gpg.encrypt_file(f, recipients=None, symmetric=CIPHER,
               always_trust=True, passphrase=passphrase)
         if sendAnon:
             iv = hsub.cryptorandom()
@@ -312,13 +312,33 @@ def hs():
 
 
 def hsd():
+    # Try getting the route info from the X-encoDHer-Route header.
+    # If the header doesn't exist, pass and parse the normal way.
+    try:
+        file_name = sys.argv[2]
+        with open(file_name, 'r') as f:
+            header = f.readline().split(': ')
+            if header[0] == 'X-encoDHer-Route':
+                route = header[1].strip().split('->')
+                passphrase = dhutils.genSharedSecret(route[1],route[0],gpg,dbpassphrase)
+                msg = gpg.decrypt_file(f, passphrase=passphrase, always_trust=True)
+                if not msg:
+                    print 'Bad shared secret!'
+                    sys.exit(1)
+                print '\n'+unicode(msg)
+                sys.exit(0)
+            else:
+                pass
+    except IndexError:
+        pass
+
     try:
         file_name = sys.argv[2]
         fromEmail = sys.argv[3]
         toEmail = sys.argv[4]
     except (IndexError):
-        print 'You need to supply a target file to be decrypted, fromEmail, and toEmail!'
-        print 'Ex: '+sys.argv[0]+' --decode-email <file> <fromEmail> <toEmail>'
+        print 'You need to supply a target file to be decrypted, and optionally route information!'
+        print 'Ex: '+sys.argv[0]+' --decode-email <file> [<fromEmail> <toEmail>]'
         sys.exit(1)
 
     try:
@@ -465,7 +485,7 @@ def mutate():
     else:
         sendAnon = False
 
-    msg = gpg.encrypt(str(signed_data), recipients=None, symmetric='AES256',
+    msg = gpg.encrypt(str(signed_data), recipients=None, symmetric=CIPHER,
           always_trust=True, passphrase=oldpassphrase)
     if sendAnon:
         iv = hsub.cryptorandom()
@@ -524,7 +544,7 @@ def aam():
                                 sys.exit(1)
                             print '\n'+unicode(msg)
                             with open('message_'+message_id[1:6]+'.txt', "w") as f:
-                                f.write('X-encoDHer-Route: <'+passphrase[1]+'-'+passphrase[0]+'>\n')
+                                f.write('X-encoDHer-Route: '+passphrase[1]+'->'+passphrase[0]+'\n')
                                 f.write(message.as_string()+'\n')
                                 print 'encrypted message stored in message_'+message_id[1:6]+'.txt'
 
